@@ -1,10 +1,10 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>&#129388;</text></svg>">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ã‰diteur du plan â€” maison &amp; jardin</title>
+<title>Éditeur du plan — maison &amp; jardin</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Caprasimo&family=Nunito:ital,wght@0,400;0,700;0,900;1,400&display=swap');
   :root{
@@ -69,42 +69,42 @@
 <body>
 <div id="app">
   <header>
-    <h1>Ã‰diteur du plan</h1>
-    <span style="font-size:12px;font-style:italic;opacity:.8">maison &amp; jardin â€” 1 case = 1 m</span>
+    <h1>Éditeur du plan</h1>
+    <span style="font-size:12px;font-style:italic;opacity:.8">maison &amp; jardin — 1 case = 1 m</span>
     <span class="spacer"></span>
-    <button id="undo" title="Ctrl+Z">â†º Annuler</button>
-    <button id="export" class="primary">ðŸ’¾ Exporter plan.json</button>
-    <button id="copy">ðŸ“‹ Copier le JSON</button>
-    <button id="importBtn">ðŸ“‚ Importer</button>
+    <button id="undo" title="Ctrl+Z">↺ Annuler</button>
+    <button id="export" class="primary">💾 Exporter plan.json</button>
+    <button id="copy">📋 Copier le JSON</button>
+    <button id="importBtn">📂 Importer</button>
     <input type="file" id="importFile" accept=".json,application/json">
-    <button id="reset" class="danger">âŸ² Plan d'origine</button>
+    <button id="reset" class="danger">⟲ Plan d'origine</button>
   </header>
 
   <aside>
-    <h2>Ajouter un Ã©lÃ©ment</h2>
+    <h2>Ajouter un élément</h2>
     <div id="palette"></div>
-    <h2>SÃ©lection</h2>
-    <div id="props"><div class="empty">Clique sur un Ã©lÃ©ment du planâ€¦</div></div>
+    <h2>Sélection</h2>
+    <div id="props"><div class="empty">Clique sur un élément du plan…</div></div>
     <h2>Aide</h2>
     <div class="hint">
-      <b>Glisser</b> : dÃ©placer Â· <b>poignÃ©e carrÃ©e</b> : redimensionner Â·
-      <b>poignÃ©e ronde</b> : pivoter Â· <kbd>Suppr</kbd> : supprimer Â·
-      <kbd>Ctrl+D</kbd> : dupliquer Â· <kbd>Ctrl+Z</kbd> : annuler Â·
-      <b>molette</b> : zoom Â· <b>clic droit / molette enfoncÃ©e</b> : dÃ©placer la vue Â·
-      flÃ¨ches : dÃ©placer de 25 cm.<br><br>
-      Tout est enregistrÃ© automatiquement dans le navigateur.
-      Quand le plan te convient, <b>Exporter plan.json</b> et dÃ©pose le fichier
-      dans le dossier du projet : Claude le lira pour mettre Ã  jour le plan SVG et le jeu.
+      <b>Glisser</b> : déplacer · <b>poignée carrée</b> : redimensionner ·
+      <b>poignée ronde</b> : pivoter · <kbd>Suppr</kbd> : supprimer ·
+      <kbd>Ctrl+D</kbd> : dupliquer · <kbd>Ctrl+Z</kbd> : annuler ·
+      <b>molette</b> : zoom · <b>clic droit / molette enfoncée</b> : déplacer la vue ·
+      flèches : déplacer de 25 cm.<br><br>
+      Tout est enregistré automatiquement dans le navigateur.
+      Quand le plan te convient, <b>Exporter plan.json</b> et dépose le fichier
+      dans le dossier du projet : Claude le lira pour mettre à jour le plan SVG et le jeu.
     </div>
   </aside>
 
   <main><canvas id="cv"></canvas></main>
 
   <footer>
-    <span id="pos">â€”</span>
+    <span id="pos">—</span>
     <span id="selinfo"></span>
     <span class="spacer" style="flex:1"></span>
-    <span>Terrain : <b id="terrainLbl">60 Ã— 36 m</b></span>
+    <span>Terrain : <b id="terrainLbl">60 × 36 m</b></span>
   </footer>
 </div>
 <div id="toast"></div>
@@ -112,9 +112,9 @@
 <script>
 'use strict';
 /* ============================================================
-   Ã‰diteur de plan â€” coordonnÃ©es en mÃ¨tres
-   x : ouest â†’ est (0..60) ; z : nord â†’ sud (0..36)
-   x,z = CENTRE de l'Ã©lÃ©ment. MÃªme rÃ©fÃ©rentiel que le jeu.
+   Éditeur de plan — coordonnées en mètres
+   x : ouest → est (0..60) ; z : nord → sud (0..36)
+   x,z = CENTRE de l'élément. Même référentiel que le jeu.
    ============================================================ */
 const TYPES = {
   maison:    { nom: 'Maison',          fill: '#6e5142', stroke: '#46362c', forme: 'rect',   l: 10,  p: 6 },
@@ -127,51 +127,51 @@ const TYPES = {
   cour:      { nom: 'Cour / terrasse', fill: '#9b938a', stroke: '#6e675e', forme: 'rect',   l: 8,   p: 5 },
   potager:   { nom: 'Potager',         fill: '#8a6c4e', stroke: '#6f5639', forme: 'rect',   l: 6,   p: 4 },
   chemin:    { nom: 'Chemin',          fill: '#c9b692', stroke: '#a08a66', forme: 'rect',   l: 3,   p: 10 },
-  etendoir:  { nom: 'Ã‰tendoir',        fill: '#3f7d4e', stroke: '#2c5838', forme: 'rect',   l: 8,   p: 0.3 },
+  etendoir:  { nom: 'Étendoir',        fill: '#3f7d4e', stroke: '#2c5838', forme: 'rect',   l: 8,   p: 0.3 },
   table:     { nom: 'Table',           fill: '#4e7a52', stroke: '#35583a', forme: 'rect',   l: 1.4, p: 0.8 },
   tasdebois: { nom: 'Tas de bois',     fill: '#5d7045', stroke: '#43522f', forme: 'rect',   l: 2.6, p: 2.4 },
   arbre:     { nom: 'Arbre',           fill: '#8b7355', stroke: '#5d4c3a', forme: 'cercle', r: 1.2 },
-  thuya:     { nom: 'Thuya / conifÃ¨re',fill: '#5e7440', stroke: '#3d4f2a', forme: 'cercle', r: 2.2 },
+  thuya:     { nom: 'Thuya / conifère',fill: '#5e7440', stroke: '#3d4f2a', forme: 'cercle', r: 2.2 },
   bosquet:   { nom: 'Bosquet',         fill: '#46603a', stroke: '#2c4124', forme: 'cercle', r: 1.7 },
   hortensia: { nom: 'Hortensia/fleur', fill: '#a08284', stroke: '#7a5f61', forme: 'cercle', r: 0.7 },
-  repere:    { nom: 'RepÃ¨re âš‘',        fill: '#c23b3b', stroke: '#7d2424', forme: 'cercle', r: 0.6 },
+  repere:    { nom: 'Repère ⚑',        fill: '#c23b3b', stroke: '#7d2424', forme: 'cercle', r: 0.6 },
   zone:      { nom: 'Zone libre',      fill: 'rgba(110,120,160,.45)', stroke: '#55608a', forme: 'rect', l: 5, p: 4 },
 };
-const SOLS = ['cour', 'potager', 'chemin', 'zone']; // dessinÃ©s dessous
+const SOLS = ['cour', 'potager', 'chemin', 'zone']; // dessinés dessous
 
-// ---------- plan d'origine (reconstituÃ© depuis la vidÃ©o + croquis) ----------
+// ---------- plan d'origine (reconstitué depuis la vidéo + croquis) ----------
 const DEFAUT = {
   version: 1,
-  unites: 'mÃ¨tres',
-  axes: 'x: ouestâ†’est, z: nordâ†’sud ; (x,z) = centre de chaque Ã©lÃ©ment ; rot en degrÃ©s, sens horaire',
-  pour_claude: "Plan corrigÃ© par l'utilisateur via editeur-plan.html. Sert de source de vÃ©ritÃ© pour regÃ©nÃ©rer plan-maison-jardin.svg et le monde de NavetPanique/game.js (fonction P(x,z), colliders, minimap).",
+  unites: 'mètres',
+  axes: 'x: ouest→est, z: nord→sud ; (x,z) = centre de chaque élément ; rot en degrés, sens horaire',
+  pour_claude: "Plan corrigé par l'utilisateur via editeur-plan.html. Sert de source de vérité pour regénérer plan-maison-jardin.svg et le monde de NavetPanique/game.js (fonction P(x,z), colliders, minimap).",
   terrain: { largeur: 60, profondeur: 36 },
   elements: [
-    // â€”â€”â€” plan corrigÃ© par l'auteur (plan.json, juin 2026) â€”â€”â€”
-    { id: 'cour',      type: 'cour',      label: 'Cour pavÃ©e',                x: 23.25,z: 21.5, l: 16.7, p: 6.45, rot: 0 },
+    // ——— plan corrigé par l'auteur (plan.json, juin 2026) ———
+    { id: 'cour',      type: 'cour',      label: 'Cour pavée',                x: 23.25,z: 21.5, l: 16.7, p: 6.45, rot: 0 },
     { id: 'potager',   type: 'potager',   label: 'Potager',                   x: 12.5, z: 4,    l: 9,    p: 4,    rot: 0 },
-    { id: 'chemin',    type: 'chemin',    label: 'Chemin (haie Ã  planter Ã  la place)', x: 58, z: 18, l: 5, p: 36, rot: 0 },
-    { id: 'maison1',   type: 'maison',    label: 'Maison 1 â€” principale',     x: 16.5, z: 27,   l: 30.25,p: 7.75, rot: 0 },
-    { id: 'maison2',   type: 'maison',    label: 'Maison 2 â€” dÃ©pendance',     x: 9.75, z: 17,   l: 10.5, p: 6.5,  rot: 0 },
-    { id: 'appentis',  type: 'appentis',  label: 'Appentis vÃ©los',            x: 3.25, z: 17,   l: 3.75, p: 6,    rot: 0 },
+    { id: 'chemin',    type: 'chemin',    label: 'Chemin (haie à planter à la place)', x: 58, z: 18, l: 5, p: 36, rot: 0 },
+    { id: 'maison1',   type: 'maison',    label: 'Maison 1 — principale',     x: 16.5, z: 27,   l: 30.25,p: 7.75, rot: 0 },
+    { id: 'maison2',   type: 'maison',    label: 'Maison 2 — dépendance',     x: 9.75, z: 17,   l: 10.5, p: 6.5,  rot: 0 },
+    { id: 'appentis',  type: 'appentis',  label: 'Appentis vélos',            x: 3.25, z: 17,   l: 3.75, p: 6,    rot: 0 },
     { id: 'mur-porte', type: 'mur',       label: 'Mur en pierres',            x: 15.25,z: 22,   l: 0.7,  p: 4.2,  rot: 0 },
-    { id: 'porte-blanche', type: 'porte', label: 'Porte blanche (fermÃ©e)',    x: 15.25,z: 22,   l: 0.3,  p: 1.4,  rot: 0 },
-    { id: 'portail',   type: 'portail',   label: 'Portail blanc Â« 92 Â»',      x: 36.6, z: 31,   l: 3.2,  p: 0.4,  rot: 0 },
+    { id: 'porte-blanche', type: 'porte', label: 'Porte blanche (fermée)',    x: 15.25,z: 22,   l: 0.3,  p: 1.4,  rot: 0 },
+    { id: 'portail',   type: 'portail',   label: 'Portail blanc « 92 »',      x: 36.6, z: 31,   l: 3.2,  p: 0.4,  rot: 0 },
     { id: 'muret-portail-o', type: 'muret', label: 'Muret du portail (ouest)',x: 33.5, z: 31,   l: 3,    p: 0.45, rot: 0 },
     { id: 'muret-portail-e', type: 'muret', label: 'Muret du portail (est)',  x: 39.5, z: 31,   l: 3,    p: 0.45, rot: 0 },
-    { id: 'haie-n-o',  type: 'haie',      label: 'Haie Ã©paisse (nord-ouest)', x: 15,   z: 0.7,  l: 30,   p: 1.4,  rot: 0 },
-    { id: 'haie-n-e',  type: 'haie',      label: 'Haie Ã©paisse (nord-est)',   x: 43,   z: 1.25, l: 20,   p: 2.2,  rot: 0, notes: 'brÃ¨che zombies entre les deux haies nord' },
+    { id: 'haie-n-o',  type: 'haie',      label: 'Haie épaisse (nord-ouest)', x: 15,   z: 0.7,  l: 30,   p: 1.4,  rot: 0 },
+    { id: 'haie-n-e',  type: 'haie',      label: 'Haie épaisse (nord-est)',   x: 43,   z: 1.25, l: 20,   p: 2.2,  rot: 0, notes: 'brèche zombies entre les deux haies nord' },
     { id: 'haie-ouest',type: 'haie',      label: 'Haie ouest',                x: 0.7,  z: 18,   l: 1.4,  p: 36,   rot: 0 },
     { id: 'haie-est-n',type: 'haie',      label: 'Haie est (nord)',           x: 53.75,z: 4.25, l: 1.4,  p: 8.5,  rot: 0 },
-    { id: 'haie-est-s',type: 'haie',      label: 'Haie est (sud)',            x: 55,   z: 24.5, l: 1.4,  p: 10.5, rot: 0, notes: 'brÃ¨che zombies entre les deux' },
+    { id: 'haie-est-s',type: 'haie',      label: 'Haie est (sud)',            x: 55,   z: 24.5, l: 1.4,  p: 10.5, rot: 0, notes: 'brèche zombies entre les deux' },
     { id: 'haie-s-o',  type: 'haie',      label: 'Haie sud-ouest',            x: 7,    z: 31.25,l: 14,   p: 1.4,  rot: 0 },
     { id: 'haie-s-e',  type: 'haie',      label: 'Haie sud-est',              x: 49,   z: 31,   l: 14,   p: 1.4,  rot: 0 },
-    { id: 'haie-basse',type: 'haie',      label: 'Haie basse (derriÃ¨re maison 1)', x: 23, z: 31, l: 18,  p: 0.8,  rot: 0 },
-    { id: 'haie-ext-se', type: 'haie',    label: 'Haie extÃ©rieure (SE)',      x: 49.25,z: 28.75,l: 9,    p: 1.6,  rot: 0 },
+    { id: 'haie-basse',type: 'haie',      label: 'Haie basse (derrière maison 1)', x: 23, z: 31, l: 18,  p: 0.8,  rot: 0 },
+    { id: 'haie-ext-se', type: 'haie',    label: 'Haie extérieure (SE)',      x: 49.25,z: 28.75,l: 9,    p: 1.6,  rot: 0 },
     { id: 'muret-1',   type: 'muret',     label: 'Muret central (ouest)',     x: 25.5, z: 17.75,l: 11.95,p: 0.7,  rot: 0 },
     { id: 'muret-2',   type: 'muret',     label: 'Muret central (est)',       x: 25.5, z: 15.25,l: 12.45,p: 0.45, rot: 20 },
     { id: 'muret-bosquet', type: 'muret', label: 'Muret du bosquet nord',     x: 29,   z: 4.75, l: 5.45, p: 1,    rot: 90 },
-    { id: 'etendoir',  type: 'etendoir',  label: 'Ã‰tendoir Ã  linge',          x: 24,   z: 13.5, l: 8,    p: 0.3,  rot: 145 },
+    { id: 'etendoir',  type: 'etendoir',  label: 'Étendoir à linge',          x: 24,   z: 13.5, l: 8,    p: 0.3,  rot: 145 },
     { id: 'table',     type: 'table',     label: 'Table verte',               x: 22.75,z: 20.5, l: 3.25, p: 1.5,  rot: 0 },
     { id: 'tas-bois',  type: 'tasdebois', label: 'Tas de bois vert',          x: 26.25,z: 10.75,l: 1,    p: 1.25, rot: 30 },
     { id: 'tas-bois-2',type: 'tasdebois', label: 'Tas de bois vert',          x: 38.5, z: 11.75,l: 2.6,  p: 2.4,  rot: 0 },
@@ -189,18 +189,18 @@ const DEFAUT = {
     { id: 'hort-2',    type: 'hortensia', label: 'Hortensia',                 x: 18.5, z: 23.4, r: 0.7 },
     { id: 'hort-3',    type: 'hortensia', label: 'Hortensia',                 x: 28,   z: 23.4, r: 0.7 },
     { id: 'hort-4',    type: 'hortensia', label: 'Hortensia',                 x: 30,   z: 23.4, r: 0.7 },
-    { id: 'spawn-joueur', type: 'repere', label: 'DÃ©part du joueur',          x: 20,   z: 20,   r: 0.6 },
-    { id: 'spawn-portail', type: 'repere', label: 'EntrÃ©e zombies : portail', x: 36.6, z: 30.2, r: 0.6 },
-    { id: 'spawn-chemin', type: 'repere', label: 'EntrÃ©e zombies : chemin',   x: 54.8, z: 10,   r: 0.6 },
-    { id: 'spawn-haie', type: 'repere',  label: 'EntrÃ©e zombies : trou de haie', x: 31.75, z: 0.75, r: 0.6 },
+    { id: 'spawn-joueur', type: 'repere', label: 'Départ du joueur',          x: 20,   z: 20,   r: 0.6 },
+    { id: 'spawn-portail', type: 'repere', label: 'Entrée zombies : portail', x: 36.6, z: 30.2, r: 0.6 },
+    { id: 'spawn-chemin', type: 'repere', label: 'Entrée zombies : chemin',   x: 54.8, z: 10,   r: 0.6 },
+    { id: 'spawn-haie', type: 'repere',  label: 'Entrée zombies : trou de haie', x: 31.75, z: 0.75, r: 0.6 },
   ],
 };
 
-// ---------- Ã©tat ----------
+// ---------- état ----------
 const LS_KEY = 'plan-jardin-v1';
 let plan = load();
 let sel = null;
-let cam = { x: 30, z: 18, ppm: 24 };   // centre vue (m) + pixels par mÃ¨tre
+let cam = { x: 30, z: 18, ppm: 24 };   // centre vue (m) + pixels par mètre
 let drag = null;                        // {mode:'move'|'resize'|'rotate'|'pan', ...}
 let undoStack = [];
 const cv = document.getElementById('cv');
@@ -277,7 +277,7 @@ function draw() {
   ctx.fillText('NORD (fond du jardin)', (x0 + x1) / 2, z0 - 8);
   ctx.fillText('SUD (rue)', (x0 + x1) / 2, z1 + 17);
 
-  // Ã©lÃ©ments : sols d'abord, puis le reste, repÃ¨res en dernier
+  // éléments : sols d'abord, puis le reste, repères en dernier
   const ordered = [...plan.elements].sort((a, b) =>
     (SOLS.includes(a.type) ? 0 : a.type === 'repere' ? 2 : 1) - (SOLS.includes(b.type) ? 0 : b.type === 'repere' ? 2 : 1));
   for (const el of ordered) drawEl(el, el === sel);
@@ -294,7 +294,7 @@ function drawEl(el, selected) {
     ctx.fillStyle = T.fill; ctx.strokeStyle = T.stroke; ctx.lineWidth = 1.6;
     ctx.beginPath(); ctx.roundRect(-w / 2, -h / 2, w, h, Math.min(6, w / 6, h / 6));
     ctx.fill(); ctx.stroke();
-    if (el.type === 'maison') { // faÃ®tage
+    if (el.type === 'maison') { // faîtage
       ctx.strokeStyle = 'rgba(40,25,18,.55)'; ctx.lineWidth = 2;
       if (w >= h) { ctx.beginPath(); ctx.moveTo(-w / 2 + 4, 0); ctx.lineTo(w / 2 - 4, 0); ctx.stroke(); }
       else { ctx.beginPath(); ctx.moveTo(0, -h / 2 + 4); ctx.lineTo(0, h / 2 - 4); ctx.stroke(); }
@@ -320,12 +320,12 @@ function drawEl(el, selected) {
     }
     if (el.type === 'repere') {
       ctx.fillStyle = '#fff'; ctx.font = 'bold ' + Math.max(10, r) + 'px Nunito';
-      ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('âš‘', 0, 0);
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('⚑', 0, 0);
     }
   }
   ctx.restore();
 
-  // Ã©tiquette
+  // étiquette
   if (el.label && cam.ppm > 10) {
     ctx.font = 'italic 12px Georgia';
     ctx.textAlign = 'center'; ctx.textBaseline = 'top';
@@ -336,7 +336,7 @@ function drawEl(el, selected) {
     ctx.fillText(el.label, sx, ly);
   }
 
-  // sÃ©lection + poignÃ©es
+  // sélection + poignées
   if (selected) {
     ctx.save();
     ctx.translate(sx, sz);
@@ -346,10 +346,10 @@ function drawEl(el, selected) {
     ctx.strokeStyle = '#1d6fb8'; ctx.lineWidth = 1.6; ctx.setLineDash([6, 4]);
     ctx.strokeRect(-w / 2 - 4, -h / 2 - 4, w + 8, h + 8);
     ctx.setLineDash([]);
-    // poignÃ©e redimensionnement (coin SE)
+    // poignée redimensionnement (coin SE)
     ctx.fillStyle = '#1d6fb8';
     ctx.fillRect(w / 2 - 1, h / 2 - 1, 9, 9);
-    // poignÃ©e rotation (au-dessus) â€” seulement pour les rects
+    // poignée rotation (au-dessus) — seulement pour les rects
     if (el.l !== undefined) {
       ctx.beginPath(); ctx.arc(0, -h / 2 - 18, 5.5, 0, 7); ctx.fill();
       ctx.beginPath(); ctx.moveTo(0, -h / 2 - 12); ctx.lineTo(0, -h / 2 - 4); ctx.stroke();
@@ -457,7 +457,7 @@ cv.addEventListener('wheel', e => {
   const r = cv.getBoundingClientRect();
   const [wx, wz] = toWorld(e.clientX - r.left, e.clientY - r.top);
   cam.ppm = clamp(cam.ppm * f, 6, 90);
-  // zoom centrÃ© sur la souris
+  // zoom centré sur la souris
   const [nx, nz] = toWorld(e.clientX - r.left, e.clientY - r.top);
   cam.x += wx - nx; cam.z += wz - nz;
   draw();
@@ -466,7 +466,7 @@ const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 
 cv.addEventListener('dblclick', e => {
   if (!sel) return;
-  const nv = prompt('Nom de l\'Ã©lÃ©ment :', sel.label || '');
+  const nv = prompt('Nom de l\'élément :', sel.label || '');
   if (nv !== null) { sel.label = nv; save(); draw(); refreshProps(); }
 });
 
@@ -497,7 +497,7 @@ addEventListener('keydown', e => {
 });
 const irand = (a, b) => Math.floor(a + Math.random() * (b - a + 1));
 function undo() {
-  if (!undoStack.length) { toast('Rien Ã  annuler'); return; }
+  if (!undoStack.length) { toast('Rien à annuler'); return; }
   plan = JSON.parse(undoStack.pop());
   sel = null; save(); draw(); refreshProps();
 }
@@ -515,23 +515,23 @@ function undo() {
       else el.r = T.r;
       plan.elements.push(el); sel = el;
       save(); draw(); refreshProps();
-      toast(T.nom + ' ajoutÃ© au centre de la vue');
+      toast(T.nom + ' ajouté au centre de la vue');
     });
     pal.appendChild(b);
   }
 }
 
-// ---------- panneau propriÃ©tÃ©s ----------
+// ---------- panneau propriétés ----------
 function refreshProps(rebuild = true) {
   const box = document.getElementById('props');
   const info = document.getElementById('selinfo');
   if (!sel) {
-    box.innerHTML = '<div class="empty">Clique sur un Ã©lÃ©ment du planâ€¦</div>';
+    box.innerHTML = '<div class="empty">Clique sur un élément du plan…</div>';
     info.textContent = '';
     return;
   }
-  info.textContent = 'â€” ' + (sel.label || sel.type) +
-    (sel.l !== undefined ? ` (${sel.l} Ã— ${sel.p} m)` : ` (r ${sel.r} m)`);
+  info.textContent = '— ' + (sel.label || sel.type) +
+    (sel.l !== undefined ? ` (${sel.l} × ${sel.p} m)` : ` (r ${sel.r} m)`);
   if (!rebuild) {
     for (const k of ['x', 'z', 'l', 'p', 'r', 'rot']) {
       const inp = box.querySelector(`[data-k="${k}"]`);
@@ -546,15 +546,15 @@ function refreshProps(rebuild = true) {
   if (sel.l !== undefined) {
     html += `<div class="row"><label>largeur <input type="number" step="0.25" min="0.2" data-k="l" value="${sel.l}"></label>
              <label>prof. <input type="number" step="0.25" min="0.2" data-k="p" value="${sel.p}"></label></div>`;
-    html += `<label>rotation (Â°) <input type="number" step="5" data-k="rot" value="${sel.rot || 0}"></label>`;
+    html += `<label>rotation (°) <input type="number" step="5" data-k="rot" value="${sel.rot || 0}"></label>`;
   } else {
     html += `<label>rayon <input type="number" step="0.25" min="0.2" data-k="r" value="${sel.r}"></label>`;
   }
   html += `<label style="flex-direction:column;align-items:stretch;gap:3px">notes pour Claude
-           <textarea data-k="notes" placeholder="ex. : en rÃ©alitÃ© ce mur fait 2 m de hautâ€¦">${sel.notes || ''}</textarea></label>`;
+           <textarea data-k="notes" placeholder="ex. : en réalité ce mur fait 2 m de haut…">${sel.notes || ''}</textarea></label>`;
   html += `<div class="row">
-    <button id="dupBtn">â§‰ Dupliquer</button>
-    <button id="delBtn" class="danger">ðŸ—‘ Supprimer</button></div>`;
+    <button id="dupBtn">⧉ Dupliquer</button>
+    <button id="delBtn" class="danger">🗑 Supprimer</button></div>`;
   box.innerHTML = html;
   box.querySelectorAll('input,textarea').forEach(inp => {
     inp.addEventListener('input', () => {
@@ -562,7 +562,7 @@ function refreshProps(rebuild = true) {
       if (k === 'label' || k === 'notes') sel[k] = inp.value;
       else sel[k] = parseFloat(inp.value) || 0;
       save(); draw();
-      document.getElementById('selinfo').textContent = 'â€” ' + (sel.label || sel.type);
+      document.getElementById('selinfo').textContent = '— ' + (sel.label || sel.type);
     });
   });
   box.querySelector('#delBtn').addEventListener('click', () => {
@@ -585,13 +585,13 @@ document.getElementById('export').addEventListener('click', () => {
   a.download = 'plan.json';
   a.click();
   URL.revokeObjectURL(a.href);
-  toast('plan.json tÃ©lÃ©chargÃ© â€” dÃ©pose-le dans le dossier Â« FPS maison Â» !');
+  toast('plan.json téléchargé — dépose-le dans le dossier « FPS maison » !');
 });
 document.getElementById('copy').addEventListener('click', async () => {
   try {
     await navigator.clipboard.writeText(JSON.stringify(plan, null, 2));
-    toast('JSON copiÃ© dans le presse-papier');
-  } catch (e) { toast('Impossible de copier â€” utilise Exporter'); }
+    toast('JSON copié dans le presse-papier');
+  } catch (e) { toast('Impossible de copier — utilise Exporter'); }
 });
 document.getElementById('importBtn').addEventListener('click', () => document.getElementById('importFile').click());
 document.getElementById('importFile').addEventListener('change', e => {
@@ -600,10 +600,10 @@ document.getElementById('importFile').addEventListener('change', e => {
   rd.onload = () => {
     try {
       const p = JSON.parse(rd.result);
-      if (!p.elements) throw new Error('pas d\'Ã©lÃ©ments');
+      if (!p.elements) throw new Error('pas d\'éléments');
       pushUndo(); plan = p; sel = null;
       save(); draw(); refreshProps(); updateTerrainLbl();
-      toast('Plan importÃ© !');
+      toast('Plan importé !');
     } catch (err) { toast('Fichier invalide : ' + err.message); }
   };
   rd.readAsText(f);
@@ -613,12 +613,12 @@ document.getElementById('reset').addEventListener('click', () => {
   pushUndo();
   plan = JSON.parse(JSON.stringify(DEFAUT));
   sel = null; save(); draw(); refreshProps(); updateTerrainLbl();
-  toast('Plan d\'origine restaurÃ©');
+  toast('Plan d\'origine restauré');
 });
 document.getElementById('undo').addEventListener('click', undo);
 function updateTerrainLbl() {
   document.getElementById('terrainLbl').textContent =
-    plan.terrain.largeur + ' Ã— ' + plan.terrain.profondeur + ' m';
+    plan.terrain.largeur + ' × ' + plan.terrain.profondeur + ' m';
 }
 
 // ---------- go ----------

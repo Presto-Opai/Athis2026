@@ -1,10 +1,10 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>&#129388;</text></svg>">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>Navet Panique ! â€” un FPS de jardin normand</title>
+<title>Navet Panique ! — un FPS de jardin normand</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Caprasimo&family=Nunito:ital,wght@0,400;0,700;0,900;1,400&display=swap');
 
@@ -25,7 +25,7 @@
     -webkit-tap-highlight-color:transparent;}
   #c{display:block;width:100%;height:100%;touch-action:none;}
 
-  /* ---------- Ã©crans (accueil / fin / pause) ---------- */
+  /* ---------- écrans (accueil / fin / pause) ---------- */
   .screen{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;
     justify-content:center;gap:18px;z-index:30;text-align:center;
     background:
@@ -122,7 +122,7 @@
     border-radius:8px;padding:6px 16px;opacity:0;transition:opacity .3s;}
   #toast.show{opacity:1;}
 
-  /* ---------- contrÃ´les tactiles ---------- */
+  /* ---------- contrôles tactiles ---------- */
   #touch-ui{display:none;}
   body.touch:not(.hud-hidden) #touch-ui{display:block;}
   #touch-ui>*{position:fixed;z-index:20;pointer-events:auto;}
@@ -147,7 +147,7 @@
   body.touch .touch-only{display:grid !important;}
   body.touch .no-touch{display:none !important;}
 
-  /* ---------- petits Ã©crans ---------- */
+  /* ---------- petits écrans ---------- */
   @media (max-width: 900px){
     #minimap{width:140px;height:auto;}
     #topbar{top:10px;gap:8px;}
@@ -180,7 +180,7 @@
     <div id="hpbar"><div id="hpfill"></div></div>
   </div>
   <div id="munitions" class="plaque">
-    <div class="hint">Recharge au potager, au fond Ã  gauche du jardin&nbsp;!</div>
+    <div class="hint">Recharge au potager, au fond à gauche du jardin&nbsp;!</div>
     <svg id="navet-icon" viewBox="0 0 40 46">
       <path d="M20 8 q3 -7 9 -8 q-2 6 -6 8 M20 8 q-3 -7 -9 -8 q2 6 6 8" fill="#4c6639"/>
       <ellipse cx="20" cy="24" rx="13" ry="14" fill="#ece6f4"/>
@@ -194,11 +194,11 @@
   <div id="toast"></div>
 </div>
 
-<!-- ========= CONTRÃ”LES TACTILES ========= -->
+<!-- ========= CONTRÔLES TACTILES ========= -->
 <div id="touch-ui">
   <div id="stick-base"><div id="stick-knob"></div></div>
-  <div id="btn-throw">ðŸ¥¬</div>
-  <div id="btn-pause">â¸</div>
+  <div id="btn-throw">🥬</div>
+  <div id="btn-pause">⏸</div>
 </div>
 <div id="degats"></div>
 <div id="vignette"></div>
@@ -206,39 +206,39 @@
 <!-- ========= ACCUEIL ========= -->
 <div id="accueil" class="screen">
   <div class="title">NAVET<br><span class="navet">PANIQUE&nbsp;!</span></div>
-  <div class="subtitle">Les zombies ont trouvÃ© le portail du <b>92</b>â€¦ DÃ©fends la maison, la dÃ©pendance
-    et le potager Ã  coups de <b>navets</b>. Une histoire vraie, dans un jardin normand, en hiver.</div>
+  <div class="subtitle">Les zombies ont trouvé le portail du <b>92</b>… Défends la maison, la dépendance
+    et le potager à coups de <b>navets</b>. Une histoire vraie, dans un jardin normand, en hiver.</div>
   <div class="card">
-    <h3>â€” Commandes â€”</h3>
+    <h3>— Commandes —</h3>
     <div class="controls no-touch">
-      <span><kbd>Z</kbd><kbd>Q</kbd><kbd>S</kbd><kbd>D</kbd> se dÃ©placer</span><span><kbd>Souris</kbd> viser</span>
+      <span><kbd>Z</kbd><kbd>Q</kbd><kbd>S</kbd><kbd>D</kbd> se déplacer</span><span><kbd>Souris</kbd> viser</span>
       <span><kbd>Clic</kbd> ou <kbd>Espace</kbd> lancer un navet (maintenir&nbsp;: plus fort)</span><span><kbd>Maj</kbd> courir</span>
-      <span><kbd>E</kbd> ramasser au potager</span><span><kbd>Ã‰chap</kbd> pause</span>
+      <span><kbd>E</kbd> ramasser au potager</span><span><kbd>Échap</kbd> pause</span>
     </div>
     <div class="controls touch-only">
-      <span>ðŸ•¹ï¸ <b>pouce gauche</b> : se dÃ©placer (Ã  fond&nbsp;= courir)</span>
-      <span>ðŸ‘† <b>glisser Ã  droite</b> : regarder</span>
-      <span>ðŸ¥¬ <b>bouton navet</b> : lancer â€” <i>maintenir&nbsp;: plus fort</i></span>
-      <span>ðŸŒ± marche dans le potager pour ramasser</span>
+      <span>🕹️ <b>pouce gauche</b> : se déplacer (à fond&nbsp;= courir)</span>
+      <span>👆 <b>glisser à droite</b> : regarder</span>
+      <span>🥬 <b>bouton navet</b> : lancer — <i>maintenir&nbsp;: plus fort</i></span>
+      <span>🌱 marche dans le potager pour ramasser</span>
     </div>
   </div>
   <button class="btn" id="play">Jouer&nbsp;!</button>
-  <div class="credit">Jardin reconstituÃ© d'aprÃ¨s la vidÃ©o &amp; le Â« plan griffonage Â» â€” Fable, juin 2026</div>
+  <div class="credit">Jardin reconstitué d'après la vidéo &amp; le « plan griffonage » — Fable, juin 2026</div>
 </div>
 
 <!-- ========= PAUSE ========= -->
 <div id="pause" class="screen hidden">
   <div class="title" style="font-size:clamp(34px,6vw,64px)">PAUSE</div>
-  <div class="subtitle">Les zombies t'attendent poliment prÃ¨s du grand thuya.</div>
+  <div class="subtitle">Les zombies t'attendent poliment près du grand thuya.</div>
   <button class="btn" id="resume">Reprendre</button>
 </div>
 
 <!-- ========= GAME OVER ========= -->
 <div id="gameover" class="screen hidden">
-  <div class="title">CROQUÃ‰&nbsp;!</div>
+  <div class="title">CROQUÉ&nbsp;!</div>
   <div class="subtitle" id="go-phrase">Un zombie t'a confondu avec un navet.</div>
   <div class="card score-final"><span id="go-score">0 points</span>
-    <small id="go-detail">0 zombies compostÃ©s â€” vague 1</small></div>
+    <small id="go-detail">0 zombies compostés — vague 1</small></div>
   <button class="btn" id="replay">Revanche&nbsp;!</button>
 </div>
 
