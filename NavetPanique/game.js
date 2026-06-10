@@ -1409,20 +1409,27 @@ function startWave(n) {
   document.getElementById('wave').textContent = 'Vague ' + n;
   annonce(n === 1 ? 'Les voilà !' : 'Vague ' + n + ' !');
   sndHorn();
-  const count = 3 + n * 2;
-  const speedMul = Math.min(1 + n * 0.11, 2.1);
-  state._pending = count;
-  const iv = setInterval(() => {
-    if (state.mode !== 'play') { clearInterval(iv); return; }
-    spawnZombie(speedMul); state._pending--;
-    if (state._pending <= 0) clearInterval(iv);
-  }, Math.max(2600 - n * 220, 900));
+  // les apparitions sont gérées dans updateWaves (boucle de jeu) :
+  // elles se mettent en pause avec le jeu au lieu de se perdre
+  state._pending = 3 + n * 2;
+  state._speedMul = Math.min(1 + n * 0.11, 2.1);
+  state._spawnIv = Math.max(2.6 - n * 0.22, 0.9);
+  state._spawnT = 0; // premier zombie immédiat
 }
 function updateWaves(dt, alive) {
   if (state.betweenWaves) {
     state.waveT -= dt;
     if (state.waveT <= 0) startWave(state.wave + 1);
-  } else if (alive === 0 && state.zombies.length === 0 && state._pending <= 0) {
+    return;
+  }
+  if (state._pending > 0) {
+    state._spawnT -= dt;
+    if (state._spawnT <= 0) {
+      spawnZombie(state._speedMul);
+      state._pending--;
+      state._spawnT = state._spawnIv;
+    }
+  } else if (alive === 0 && state.zombies.length === 0) {
     state.betweenWaves = true; state.waveT = 6;
     state.score += 25; updateScore();
     annonce('Vague nettoyée ! +25');
