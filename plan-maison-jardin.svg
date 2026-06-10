@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1500 1040" font-family="Georgia, 'Times New Roman', serif">
+  <defs>
+    <!-- ======== textures & motifs ======== -->
+    <pattern id="grass" width="26" height="26" patternUnits="userSpaceOnUse">
+      <rect width="26" height="26" fill="#b8c79a"/>
+      <circle cx="6" cy="8" r="1.1" fill="#a3b585"/>
+      <circle cx="18" cy="4" r="0.9" fill="#aabb8d"/>
+      <circle cx="13" cy="17" r="1.2" fill="#9fb281"/>
+      <circle cx="22" cy="21" r="0.9" fill="#adbe90"/>
+      <circle cx="3" cy="22" r="0.8" fill="#a8b98b"/>
+    </pattern>
+    <pattern id="paving" width="30" height="22" patternUnits="userSpaceOnUse">
+      <rect width="30" height="22" fill="#9b938a"/>
+      <rect x="1" y="1" width="13" height="9" rx="2" fill="#a8a096"/>
+      <rect x="16" y="1" width="13" height="9" rx="2" fill="#a39b90"/>
+      <rect x="1" y="12" width="9" height="9" rx="2" fill="#aaa298"/>
+      <rect x="12" y="12" width="17" height="9" rx="2" fill="#a59d92"/>
+      <circle cx="15" cy="11" r="1.4" fill="#7e8a6b"/>
+    </pattern>
+    <pattern id="dirt" width="34" height="20" patternUnits="userSpaceOnUse">
+      <rect width="34" height="20" fill="#9c7e5f"/>
+      <path d="M0 5 H34 M0 12 H34 M0 19 H34" stroke="#8a6d50" stroke-width="2.5" fill="none"/>
+      <circle cx="8" cy="8" r="1" fill="#7c6147"/>
+      <circle cx="24" cy="15" r="1" fill="#84684c"/>
+    </pattern>
+    <pattern id="roof1" width="16" height="10" patternUnits="userSpaceOnUse">
+      <rect width="16" height="10" fill="#7a5a4a"/>
+      <path d="M0 9.5 H16 M0 4.5 H16" stroke="#684a3c" stroke-width="1.6"/>
+      <path d="M4 0 V4.5 M12 5 V9.5" stroke="#684a3c" stroke-width="1.2"/>
+      <circle cx="9" cy="2.5" r="1.1" fill="#7e8a5a" opacity="0.7"/>
+    </pattern>
+    <pattern id="path" width="22" height="22" patternUnits="userSpaceOnUse">
+      <rect width="22" height="22" fill="#c9b692"/>
+      <circle cx="5" cy="6" r="1.2" fill="#b7a37e"/>
+      <circle cx="15" cy="13" r="1.4" fill="#bda987"/>
+      <circle cx="9" cy="19" r="1" fill="#b29e7a"/>
+    </pattern>
+    <radialGradient id="thuya" cx="40%" cy="35%" r="75%">
+      <stop offset="0%" stop-color="#8aa05c"/>
+      <stop offset="70%" stop-color="#5e7440"/>
+      <stop offset="100%" stop-color="#8a6f4a"/>
+    </radialGradient>
+    <radialGradient id="bosquet" cx="45%" cy="40%" r="75%">
+      <stop offset="0%" stop-color="#6d8a52"/>
+      <stop offset="100%" stop-color="#465e35"/>
+    </radialGradient>
+    <filter id="soft" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="3" dy="5" stdDeviation="4" flood-color="#4a4238" flood-opacity="0.35"/>
+    </filter>
+    <filter id="paper">
+      <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" result="n"/>
+      <feColorMatrix in="n" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0.04 0.04 0.04 0 0" result="grain"/>
+      <feComposite in="grain" in2="SourceGraphic" operator="over"/>
+    </filter>
+    <g id="hedgeBlob">
+      <circle r="14" fill="#3d5232"/>
+      <circle cx="-9" cy="-4" r="9" fill="#46603a"/>
+      <circle cx="9" cy="-3" r="9" fill="#425a36"/>
+      <circle cx="2" cy="-8" r="7" fill="#4c6840"/>
+    </g>
+    <g id="treeWinter">
+      <circle r="16" fill="none" stroke="#8b7355" stroke-width="1.6" stroke-dasharray="3 4"/>
+      <path d="M0 14 V-2 M0 -2 L-8 -12 M0 -2 L7 -13 M0 4 L9 -4 M0 4 L-9 -3" stroke="#7a5f44" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+    </g>
+  </defs>
+
+  <!-- ======== fond papier ======== -->
+  <rect width="1500" height="1040" fill="#efe7d3"/>
+  <rect width="1500" height="1040" fill="#efe7d3" filter="url(#paper)"/>
+  <rect x="22" y="22" width="1456" height="996" fill="none" stroke="#6b5d4a" stroke-width="2.5"/>
+  <rect x="30" y="30" width="1440" height="980" fill="none" stroke="#6b5d4a" stroke-width="1"/>
+
+  <!-- ======== titres ======== -->
+  <text x="750" y="86" text-anchor="middle" font-size="44" font-style="italic" fill="#4a3f30" letter-spacing="2">Plan de la maison &amp; du jardin</text>
+  <text x="750" y="118" text-anchor="middle" font-size="17" fill="#7a6c56" letter-spacing="4">RELEVÉ CORRIGÉ PAR L'AUTEUR — ÉDITION 2 — HIVER</text>
+  <line x1="560" y1="100" x2="700" y2="100" stroke="#9b8b70" stroke-width="1"/>
+  <line x1="800" y1="100" x2="940" y2="100" stroke="#9b8b70" stroke-width="1"/>
+
+  <!-- ======== carte : 1 m = 22 px ; origine (90,150) ; terrain 60 m × 36 m ======== -->
+  <g transform="translate(90,150)">
+    <!-- pelouse -->
+    <rect x="0" y="0" width="1320" height="792" fill="url(#grass)" stroke="#5a6b48" stroke-width="2"/>
+
+    <!-- chemin à l'est -->
+    <rect x="1254" y="0" width="66" height="792" fill="url(#path)"/>
+    <line x1="1254" y1="0" x2="1254" y2="792" stroke="#8a7a5c" stroke-width="2" stroke-dasharray="8 6"/>
+
+    <!-- potager (8..17, 2..6) -->
+    <rect x="176" y="44" width="198" height="88" fill="url(#dirt)" stroke="#6f5639" stroke-width="2" rx="3"/>
+
+    <!-- cour pavée (14.9..31.6, 18.3..24.7) — devant la longère -->
+    <rect x="327.8" y="402.6" width="367.4" height="141.9" fill="url(#paving)" stroke="#6e675e" stroke-width="2"/>
+
+    <!-- ===== haies ===== -->
+    <g opacity="0.97">
+      <!-- nord-ouest (0..30 m) -->
+      <use href="#hedgeBlob" x="20" y="12"/><use href="#hedgeBlob" x="58" y="15"/><use href="#hedgeBlob" x="96" y="10"/>
+      <use href="#hedgeBlob" x="134" y="15"/><use href="#hedgeBlob" x="172" y="11"/><use href="#hedgeBlob" x="210" y="15"/>
+      <use href="#hedgeBlob" x="248" y="10"/><use href="#hedgeBlob" x="286" y="15"/><use href="#hedgeBlob" x="324" y="11"/>
+      <use href="#hedgeBlob" x="362" y="15"/><use href="#hedgeBlob" x="400" y="10"/><use href="#hedgeBlob" x="438" y="15"/>
+      <use href="#hedgeBlob" x="476" y="11"/><use href="#hedgeBlob" x="514" y="15"/><use href="#hedgeBlob" x="552" y="10"/>
+      <use href="#hedgeBlob" x="590" y="14"/><use href="#hedgeBlob" x="628" y="11"/><use href="#hedgeBlob" x="650" y="15"/>
+      <!-- nord-est (33..53 m), plus épaisse -->
+      <use href="#hedgeBlob" x="740" y="26"/><use href="#hedgeBlob" x="778" y="30"/><use href="#hedgeBlob" x="816" y="24"/>
+      <use href="#hedgeBlob" x="854" y="30"/><use href="#hedgeBlob" x="892" y="25"/><use href="#hedgeBlob" x="930" y="30"/>
+      <use href="#hedgeBlob" x="968" y="24"/><use href="#hedgeBlob" x="1006" y="30"/><use href="#hedgeBlob" x="1044" y="25"/>
+      <use href="#hedgeBlob" x="1082" y="29"/><use href="#hedgeBlob" x="1120" y="24"/><use href="#hedgeBlob" x="1155" y="28"/>
+      <!-- ouest (toute la hauteur) -->
+      <use href="#hedgeBlob" x="13" y="52"/><use href="#hedgeBlob" x="16" y="90"/><use href="#hedgeBlob" x="12" y="128"/>
+      <use href="#hedgeBlob" x="15" y="166"/><use href="#hedgeBlob" x="12" y="204"/><use href="#hedgeBlob" x="16" y="242"/>
+      <use href="#hedgeBlob" x="12" y="280"/><use href="#hedgeBlob" x="15" y="318"/><use href="#hedgeBlob" x="12" y="356"/>
+      <use href="#hedgeBlob" x="15" y="394"/><use href="#hedgeBlob" x="12" y="432"/><use href="#hedgeBlob" x="16" y="470"/>
+      <use href="#hedgeBlob" x="12" y="508"/><use href="#hedgeBlob" x="14" y="546"/><use href="#hedgeBlob" x="12" y="584"/>
+      <use href="#hedgeBlob" x="15" y="622"/><use href="#hedgeBlob" x="12" y="660"/><use href="#hedgeBlob" x="14" y="698"/>
+      <use href="#hedgeBlob" x="12" y="736"/><use href="#hedgeBlob" x="14" y="772"/>
+      <!-- est nord (53.75, 0..8.5) -->
+      <use href="#hedgeBlob" x="1182" y="16"/><use href="#hedgeBlob" x="1184" y="54"/><use href="#hedgeBlob" x="1181" y="92"/>
+      <use href="#hedgeBlob" x="1184" y="130"/><use href="#hedgeBlob" x="1182" y="168"/>
+      <!-- est sud (55, 19.25..29.75) -->
+      <use href="#hedgeBlob" x="1209" y="438"/><use href="#hedgeBlob" x="1211" y="476"/><use href="#hedgeBlob" x="1208" y="514"/>
+      <use href="#hedgeBlob" x="1211" y="552"/><use href="#hedgeBlob" x="1209" y="590"/><use href="#hedgeBlob" x="1211" y="628"/>
+      <!-- sud-ouest (0..14, derrière la longère) -->
+      <use href="#hedgeBlob" x="20" y="688"/><use href="#hedgeBlob" x="58" y="692"/><use href="#hedgeBlob" x="96" y="687"/>
+      <use href="#hedgeBlob" x="134" y="692"/><use href="#hedgeBlob" x="172" y="688"/><use href="#hedgeBlob" x="210" y="692"/>
+      <use href="#hedgeBlob" x="248" y="687"/><use href="#hedgeBlob" x="286" y="691"/>
+      <!-- sud-est (42..56) -->
+      <use href="#hedgeBlob" x="936" y="680"/><use href="#hedgeBlob" x="974" y="684"/><use href="#hedgeBlob" x="1012" y="679"/>
+      <use href="#hedgeBlob" x="1050" y="684"/><use href="#hedgeBlob" x="1088" y="680"/><use href="#hedgeBlob" x="1126" y="684"/>
+      <use href="#hedgeBlob" x="1164" y="679"/><use href="#hedgeBlob" x="1202" y="683"/>
+      <!-- haie extérieure SE (44.75..53.75, 28.75) -->
+      <use href="#hedgeBlob" x="1000" y="630"/><use href="#hedgeBlob" x="1042" y="634"/><use href="#hedgeBlob" x="1084" y="629"/>
+      <use href="#hedgeBlob" x="1126" y="633"/><use href="#hedgeBlob" x="1165" y="630"/>
+    </g>
+    <!-- haie basse derrière la longère (14..32, fine) -->
+    <rect x="308" y="673" width="396" height="18" rx="9" fill="#46603a" stroke="#2c4124" stroke-width="1.5"/>
+
+    <!-- ===== murets centraux ===== -->
+    <g stroke="#8d8170" stroke-width="9" stroke-linecap="round" fill="none">
+      <path d="M429.7 390.5 L692.3 390.5"/>
+      <path d="M432.3 288.6 L689.7 382.4"/>
+      <path d="M638 44.7 L638 164.5"/>
+    </g>
+    <g stroke="#6e6152" stroke-width="1.6" fill="none">
+      <path d="M429.7 386 L692.3 386 M429.7 395 L692.3 395"/>
+      <path d="M433.8 284.4 L691.2 378.2 M430.8 292.8 L688.2 386.6"/>
+      <path d="M633.5 44.7 L633.5 164.5 M642.5 44.7 L642.5 164.5"/>
+    </g>
+
+    <!-- ===== bosquets ===== -->
+    <g transform="translate(572,99)"><!-- bosquet nord, le long du muret -->
+      <ellipse rx="62" ry="55" fill="url(#bosquet)"/>
+      <circle cx="-26" cy="-14" r="26" fill="#54703f"/>
+      <circle cx="22" cy="12" r="24" fill="#4c6639"/>
+      <circle cx="8" cy="-22" r="18" fill="#62804a"/>
+    </g>
+    <g transform="translate(627,258.5)">
+      <ellipse rx="51" ry="46" fill="url(#bosquet)"/>
+      <circle cx="-18" cy="-10" r="20" fill="#54703f"/>
+      <circle cx="16" cy="10" r="18" fill="#4c6639"/>
+    </g>
+    <circle cx="253" cy="286" r="22" fill="url(#bosquet)"/>
+    <circle cx="198" cy="203.5" r="27.5" fill="#5a7a48" stroke="#3d5232" stroke-width="1.5"/>
+
+    <!-- ===== GRAND THUYA (33.75, 12 — r 3.5 m) ===== -->
+    <g transform="translate(742.5,264)">
+      <circle r="77" fill="url(#thuya)"/>
+      <circle cx="-24" cy="-19" r="34" fill="#7e9454"/>
+      <circle cx="30" cy="16" r="28" fill="#6d8348" opacity="0.9"/>
+      <path d="M40 -42 q18 13 10 44" stroke="#8a6f4a" stroke-width="6" fill="none" stroke-linecap="round"/>
+    </g>
+
+    <!-- ===== arbres ===== -->
+    <g transform="translate(462,346.5)"><use href="#treeWinter"/></g>
+    <g transform="translate(352,214.5) scale(0.7)"><use href="#treeWinter"/></g>
+    <g transform="translate(940.5,621.5)"><use href="#treeWinter"/></g>
+    <g transform="translate(1111,352) scale(0.85)"><use href="#treeWinter"/></g>
+    <g transform="translate(1122,484) scale(1.05)"><use href="#treeWinter"/></g>
+
+    <!-- ===== tas de bois ×2 ===== -->
+    <g transform="translate(577.5,236.5) rotate(30)">
+      <ellipse rx="16" ry="15" fill="#5d7045"/>
+      <path d="M-11 7 L11 5 M-12 0 L12 -1 M-10 -6 L10 -7" stroke="#4a5a38" stroke-width="2.5"/>
+    </g>
+    <g transform="translate(847,258.5)">
+      <ellipse rx="30" ry="27" fill="#5d7045"/>
+      <ellipse cx="-7" cy="-6" rx="16" ry="12" fill="#6d8052"/>
+      <path d="M-20 14 L20 12 M-23 5 L23 3 M-20 -5 L20 -7" stroke="#4a5a38" stroke-width="2.6"/>
+    </g>
+
+    <!-- ===== étendoir à linge (diagonale, rot 145°) ===== -->
+    <g>
+      <line x1="455.8" y1="347.4" x2="600.2" y2="246.6" stroke="#3f7d4e" stroke-width="2.5"/>
+      <circle cx="455.8" cy="347.4" r="4" fill="#7a6c56"/><circle cx="600.2" cy="246.6" r="4" fill="#7a6c56"/>
+      <g transform="translate(499.1,317.2) rotate(-35)"><rect width="16" height="13" fill="#d8e4ea" stroke="#9bb0ba"/></g>
+      <g transform="translate(528,297) rotate(-35)"><rect width="16" height="11" fill="#e7d8de" stroke="#bfa3ae"/></g>
+      <g transform="translate(556.9,276.8) rotate(-35)"><rect width="14" height="14" fill="#dfe7d0" stroke="#aab894"/></g>
+    </g>
+
+    <!-- hortensias le long de la longère -->
+    <g fill="#9a7d80">
+      <circle cx="363" cy="508" r="13"/><circle cx="407" cy="508" r="13"/>
+      <circle cx="616" cy="508" r="13"/><circle cx="660" cy="508" r="13"/>
+    </g>
+
+    <!-- ===== appentis vélos (1.375..5.125, 14..20) ===== -->
+    <g filter="url(#soft)">
+      <rect x="30.25" y="308" width="82.5" height="132" fill="#8d8170" stroke="#5d5244" stroke-width="2.5"/>
+      <path d="M30.25 341 H112.75 M30.25 374 H112.75 M30.25 407 H112.75" stroke="#5d5244" stroke-width="1.2" opacity="0.6"/>
+      <line x1="112.75" y1="308" x2="112.75" y2="440" stroke="#5d5244" stroke-width="1.5" stroke-dasharray="6 5"/>
+      <g stroke="#454035" stroke-width="2" fill="none">
+        <circle cx="58" cy="350" r="7"/><circle cx="80" cy="350" r="7"/><path d="M58 350 L69 338 L80 350 M69 338 V332"/>
+        <circle cx="58" cy="396" r="7"/><circle cx="80" cy="396" r="7"/><path d="M58 396 L69 384 L80 396 M69 384 V378"/>
+      </g>
+    </g>
+
+    <!-- ===== maison 2 — dépendance (4.5..15, 13.75..20.25) ===== -->
+    <g filter="url(#soft)">
+      <rect x="99" y="302.5" width="231" height="143" fill="url(#roof1)" stroke="#4a3a30" stroke-width="3"/>
+      <line x1="99" y1="374" x2="330" y2="374" stroke="#3c2e26" stroke-width="2.5"/>
+      <rect x="270" y="440" width="44" height="8" fill="#f4f2ec" stroke="#8a8276" stroke-width="1.5"/>
+      <rect x="178" y="440" width="26" height="8" fill="#8c98a0" stroke="#76828a" stroke-width="1.5"/>
+    </g>
+
+    <!-- ===== mur de pierres + porte blanche (15.25, 22 — 0.7 × 4.2) ===== -->
+    <g>
+      <rect x="327.8" y="437.8" width="15.4" height="92.4" fill="#a89a85" stroke="#5d5244" stroke-width="2"/>
+      <path d="M327.8 456 h15.4 M327.8 474 h15.4 M327.8 512 h15.4" stroke="#6e6152" stroke-width="1.4"/>
+      <rect x="325.8" y="468.6" width="19.4" height="30.8" fill="#fdfdf8" stroke="#5d5244" stroke-width="2" rx="2"/>
+      <path d="M335.5 471 v26" stroke="#b8b4a8" stroke-width="1.4"/>
+    </g>
+
+    <!-- ===== maison 1 — LONGÈRE principale (1.4..31.6, 23.1..30.9) ===== -->
+    <g filter="url(#soft)">
+      <rect x="30.8" y="508.2" width="665.5" height="170.5" fill="url(#roof1)" stroke="#4a3a30" stroke-width="3"/>
+      <line x1="30.8" y1="593.5" x2="696.3" y2="593.5" stroke="#3c2e26" stroke-width="2.5"/>
+      <!-- cheminées (x = 11.5 et 24.5 m) -->
+      <rect x="243" y="583" width="20" height="20" fill="#8d8170" stroke="#4a3a30" stroke-width="2"/>
+      <rect x="529" y="583" width="20" height="20" fill="#8d8170" stroke="#4a3a30" stroke-width="2"/>
+      <!-- lucarne + velux -->
+      <rect x="160" y="520" width="34" height="26" fill="#8d6e5c" stroke="#4a3a30" stroke-width="2"/>
+      <rect x="420" y="518" width="30" height="20" fill="#aebfc7" stroke="#4a3a30" stroke-width="2"/>
+      <rect x="320" y="640" width="30" height="20" fill="#aebfc7" stroke="#4a3a30" stroke-width="2"/>
+      <!-- portes-fenêtres côté cour (x = 19.7 et 28.5 m) -->
+      <rect x="411" y="504" width="44" height="8" fill="#f4f2ec" stroke="#8a8276" stroke-width="1.5"/>
+      <rect x="605" y="504" width="46" height="8" fill="#f4f2ec" stroke="#8a8276" stroke-width="1.5"/>
+    </g>
+
+    <!-- table verte (3.25 × 1.5, dans la cour) -->
+    <g transform="translate(500.5,451)">
+      <rect x="-35.75" y="-16.5" width="71.5" height="33" rx="5" fill="#4e7a52" stroke="#35583a" stroke-width="2"/>
+      <path d="M-26 -8 H26 M-26 0 H26 M-26 8 H26" stroke="#3d6242" stroke-width="1.5"/>
+    </g>
+
+    <!-- clôture sud + portail blanc « 92 » -->
+    <rect x="704" y="677.5" width="66" height="9" fill="#a89a85" stroke="#6e6152" stroke-width="1.4"/>
+    <g transform="translate(770,681.5)">
+      <path d="M0 -8 h12 m4 0 h12 m4 0 h12 m4 0 h12 m4 0 h12" stroke="#fdfdf8" stroke-width="9" stroke-linecap="round"/>
+      <rect x="72" y="-14" width="10" height="22" fill="#7d8a91"/>
+      <rect x="71" y="-26" width="12" height="12" fill="#2e6b3e"/>
+    </g>
+    <rect x="836" y="677.5" width="66" height="9" fill="#a89a85" stroke="#6e6152" stroke-width="1.4"/>
+    <!-- entrée en terre battue -->
+    <path d="M794 677 q10 -40 -6 -84 q-8 -28 6 -52" stroke="#c9b692" stroke-width="26" fill="none" stroke-linecap="round" opacity="0.85"/>
+
+    <!-- ======== étiquettes ======== -->
+    <g font-size="19" fill="#3e3526" font-style="italic">
+      <text x="275" y="100" text-anchor="middle">Potager</text>
+      <text x="572" y="92" text-anchor="middle" fill="#e8e4d4">Bosquet</text>
+      <text x="660" y="190" text-anchor="middle" font-size="15" fill="#5d5244">muret</text>
+      <text x="560" y="416" text-anchor="middle" font-size="15" fill="#5d5244">muret</text>
+      <text x="742.5" y="362" text-anchor="middle">Grand thuya</text>
+      <text x="462" y="392" text-anchor="middle" font-size="16">Arbre</text>
+      <text x="352" y="248" text-anchor="middle" font-size="15">Arbre solitaire</text>
+      <text x="528" y="338" text-anchor="middle" font-size="15" transform="rotate(-35 528 338)">Étendoir</text>
+      <text x="577" y="212" text-anchor="middle" font-size="14">tas de bois</text>
+      <text x="847" y="304" text-anchor="middle" font-size="14">tas de bois vert</text>
+      <text x="1287" y="396" text-anchor="middle" transform="rotate(90 1287 396)">Chemin  —  (haie à planter à la place)</text>
+      <text x="1080" y="730" text-anchor="middle">Arbres &amp; haie extérieure</text>
+      <text x="330" y="42" text-anchor="middle" fill="#2e4226">Haie épaisse</text>
+      <text x="511" y="438" text-anchor="middle" font-size="17">Cour pavée</text>
+      <text x="500" y="486" text-anchor="middle" font-size="14">table verte</text>
+    </g>
+    <g font-size="21" fill="#f4efe2" font-weight="bold" letter-spacing="1">
+      <text x="363" y="640" text-anchor="middle">MAISON 1 — longère principale</text>
+      <text x="214" y="378" text-anchor="middle" font-size="18">MAISON 2</text>
+      <text x="214" y="400" text-anchor="middle" font-size="13" font-weight="normal" font-style="italic">dépendance</text>
+      <text x="71" y="374" text-anchor="middle" font-size="13" transform="rotate(-90 71 374)">APPENTIS — vélos</text>
+    </g>
+    <g font-size="15" fill="#3e3526" font-style="italic">
+      <text x="352" y="468" text-anchor="start" transform="translate(8,0)">⟵ Porte blanche (fermée)</text>
+      <text x="806" y="724">Portail blanc « 92 » + boîte aux lettres</text>
+      <text x="600" y="714" text-anchor="middle" font-size="14" fill="#7a6c56">— rue —</text>
+    </g>
+  </g>
+
+  <!-- ======== rose des vents & échelle ======== -->
+  <g transform="translate(1380,210)" stroke="#4a3f30" fill="#4a3f30">
+    <circle r="30" fill="none" stroke-width="1.4"/>
+    <path d="M0 -26 L6 8 L0 2 L-6 8 Z"/>
+    <text y="-38" text-anchor="middle" font-size="18" stroke="none">N*</text>
+  </g>
+  <g transform="translate(112,972)">
+    <rect x="0" y="0" width="110" height="7" fill="#4a3f30"/>
+    <rect x="110" y="0" width="110" height="7" fill="none" stroke="#4a3f30" stroke-width="1.4"/>
+    <text x="0" y="24" font-size="14" fill="#4a3f30">0</text>
+    <text x="104" y="24" font-size="14" fill="#4a3f30">5 m</text>
+    <text x="212" y="24" font-size="14" fill="#4a3f30">10 m</text>
+    <text x="300" y="14" font-size="13" font-style="italic" fill="#7a6c56">* orientation relative au croquis (haie épaisse en haut)</text>
+  </g>
+  <text x="1388" y="985" text-anchor="end" font-size="14" font-style="italic" fill="#7a6c56">Édition 2 — dressé par Fable d'après le plan.json corrigé de l'auteur, juin 2026</text>
+</svg>

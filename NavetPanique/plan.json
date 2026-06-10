@@ -1,0 +1,428 @@
+{
+  "version": 1,
+  "unites": "mètres",
+  "axes": "x: ouest→est, z: nord→sud ; (x,z) = centre de chaque élément ; rot en degrés, sens horaire",
+  "pour_claude": "Plan corrigé par l'utilisateur via editeur-plan.html. Sert de source de vérité pour regénérer plan-maison-jardin.svg et le monde de NavetPanique/game.js (fonction P(x,z), colliders, minimap).",
+  "terrain": {
+    "largeur": 60,
+    "profondeur": 36
+  },
+  "elements": [
+    {
+      "id": "cour",
+      "type": "cour",
+      "label": "Cour pavée",
+      "x": 23.25,
+      "z": 21.5,
+      "l": 16.7,
+      "p": 6.45,
+      "rot": 0
+    },
+    {
+      "id": "potager",
+      "type": "potager",
+      "label": "Potager",
+      "x": 12.5,
+      "z": 4,
+      "l": 9,
+      "p": 4,
+      "rot": 0
+    },
+    {
+      "id": "chemin",
+      "type": "chemin",
+      "label": "Chemin (haie à planter à la place)",
+      "x": 58,
+      "z": 18,
+      "l": 5,
+      "p": 36,
+      "rot": 0
+    },
+    {
+      "id": "maison1",
+      "type": "maison",
+      "label": "Maison 1 — principale",
+      "x": 16.5,
+      "z": 27,
+      "l": 30.25,
+      "p": 7.75,
+      "rot": 0
+    },
+    {
+      "id": "maison2",
+      "type": "maison",
+      "label": "Maison 2 — dépendance",
+      "x": 9.75,
+      "z": 17,
+      "l": 10.5,
+      "p": 6.5,
+      "rot": 0
+    },
+    {
+      "id": "appentis",
+      "type": "appentis",
+      "label": "Appentis vélos",
+      "x": 3.25,
+      "z": 17,
+      "l": 3.75,
+      "p": 6,
+      "rot": 0
+    },
+    {
+      "id": "mur-porte",
+      "type": "mur",
+      "label": "Mur en pierres",
+      "x": 15.25,
+      "z": 22,
+      "l": 0.7,
+      "p": 4.2,
+      "rot": 0
+    },
+    {
+      "id": "porte-blanche",
+      "type": "porte",
+      "label": "Porte blanche (fermée)",
+      "x": 15.25,
+      "z": 22,
+      "l": 0.3,
+      "p": 1.4,
+      "rot": 0
+    },
+    {
+      "id": "portail",
+      "type": "portail",
+      "label": "Portail blanc « 92 »",
+      "x": 36.6,
+      "z": 31,
+      "l": 3.2,
+      "p": 0.4,
+      "rot": 0
+    },
+    {
+      "id": "muret-portail-o",
+      "type": "muret",
+      "label": "Muret du portail (ouest)",
+      "x": 33.5,
+      "z": 31,
+      "l": 3,
+      "p": 0.45,
+      "rot": 0
+    },
+    {
+      "id": "muret-portail-e",
+      "type": "muret",
+      "label": "Muret du portail (est)",
+      "x": 39.5,
+      "z": 31,
+      "l": 3,
+      "p": 0.45,
+      "rot": 0
+    },
+    {
+      "id": "haie-n-o",
+      "type": "haie",
+      "label": "Haie épaisse (nord-ouest)",
+      "x": 15,
+      "z": 0.7,
+      "l": 30,
+      "p": 1.4,
+      "rot": 0
+    },
+    {
+      "id": "haie-n-e",
+      "type": "haie",
+      "label": "Haie épaisse (nord-est)",
+      "x": 43,
+      "z": 1.25,
+      "l": 20,
+      "p": 2.2,
+      "rot": 0,
+      "notes": "brèche zombies entre les deux haies nord"
+    },
+    {
+      "id": "haie-ouest",
+      "type": "haie",
+      "label": "Haie ouest",
+      "x": 0.7,
+      "z": 18,
+      "l": 1.4,
+      "p": 36,
+      "rot": 0
+    },
+    {
+      "id": "haie-est-n",
+      "type": "haie",
+      "label": "Haie est (nord)",
+      "x": 53.75,
+      "z": 4.25,
+      "l": 1.4,
+      "p": 8.5,
+      "rot": 0
+    },
+    {
+      "id": "haie-est-s",
+      "type": "haie",
+      "label": "Haie est (sud)",
+      "x": 55,
+      "z": 24.5,
+      "l": 1.4,
+      "p": 10.5,
+      "rot": 0,
+      "notes": "brèche zombies entre les deux"
+    },
+    {
+      "id": "haie-s-o",
+      "type": "haie",
+      "label": "Haie sud-ouest",
+      "x": 7,
+      "z": 31.25,
+      "l": 14,
+      "p": 1.4,
+      "rot": 0
+    },
+    {
+      "id": "haie-s-e",
+      "type": "haie",
+      "label": "Haie sud-est",
+      "x": 49,
+      "z": 31,
+      "l": 14,
+      "p": 1.4,
+      "rot": 0
+    },
+    {
+      "id": "haie-basse",
+      "type": "haie",
+      "label": "Haie basse (derrière maison 1)",
+      "x": 23,
+      "z": 31,
+      "l": 18,
+      "p": 0.8,
+      "rot": 0
+    },
+    {
+      "id": "haie-ext-se",
+      "type": "haie",
+      "label": "Haie extérieure (SE)",
+      "x": 49.25,
+      "z": 28.75,
+      "l": 9,
+      "p": 1.6,
+      "rot": 0
+    },
+    {
+      "id": "muret-1",
+      "type": "muret",
+      "label": "Muret central (ouest)",
+      "x": 25.5,
+      "z": 17.75,
+      "l": 11.95,
+      "p": 0.7,
+      "rot": 0
+    },
+    {
+      "id": "muret-2",
+      "type": "muret",
+      "label": "Muret central (est)",
+      "x": 25.5,
+      "z": 15.25,
+      "l": 12.45,
+      "p": 0.45,
+      "rot": 20
+    },
+    {
+      "id": "muret-bosquet",
+      "type": "muret",
+      "label": "Muret du bosquet nord",
+      "x": 29,
+      "z": 4.75,
+      "l": 5.45,
+      "p": 1,
+      "rot": 90
+    },
+    {
+      "id": "etendoir",
+      "type": "etendoir",
+      "label": "Étendoir à linge",
+      "x": 24,
+      "z": 13.5,
+      "l": 8,
+      "p": 0.3,
+      "rot": 145
+    },
+    {
+      "id": "table",
+      "type": "table",
+      "label": "Table verte",
+      "x": 22.75,
+      "z": 20.5,
+      "l": 3.25,
+      "p": 1.5,
+      "rot": 0
+    },
+    {
+      "id": "tas-bois",
+      "type": "tasdebois",
+      "label": "Tas de bois vert",
+      "x": 26.25,
+      "z": 10.75,
+      "l": 1,
+      "p": 1.25,
+      "rot": 30
+    },
+    {
+      "id": "arbre-jardin",
+      "type": "arbre",
+      "label": "Arbre",
+      "x": 21,
+      "z": 15.75,
+      "r": 1.2
+    },
+    {
+      "id": "arbre-solitaire",
+      "type": "arbre",
+      "label": "Arbre solitaire",
+      "x": 16,
+      "z": 9.75,
+      "r": 0.75
+    },
+    {
+      "id": "arbre-se-1",
+      "type": "arbre",
+      "label": "Arbre (SE)",
+      "x": 42.75,
+      "z": 28.25,
+      "r": 1.2
+    },
+    {
+      "id": "arbre-se-2",
+      "type": "arbre",
+      "label": "Arbre (SE)",
+      "x": 50.5,
+      "z": 16,
+      "r": 1
+    },
+    {
+      "id": "arbre-se-3",
+      "type": "arbre",
+      "label": "Arbre (SE)",
+      "x": 51,
+      "z": 22,
+      "r": 1.3
+    },
+    {
+      "id": "thuya",
+      "type": "thuya",
+      "label": "Grand thuya",
+      "x": 33.75,
+      "z": 12,
+      "r": 3.5
+    },
+    {
+      "id": "bosquet-1",
+      "type": "bosquet",
+      "label": "Bosquet",
+      "x": 26,
+      "z": 4.5,
+      "r": 2.75
+    },
+    {
+      "id": "bosquet-2",
+      "type": "bosquet",
+      "label": "Bosquet",
+      "x": 28.5,
+      "z": 11.75,
+      "r": 2.25
+    },
+    {
+      "id": "bosquet-3",
+      "type": "bosquet",
+      "label": "Bosquet",
+      "x": 11.5,
+      "z": 13,
+      "r": 1
+    },
+    {
+      "id": "bosquet-4",
+      "type": "bosquet",
+      "label": "Bosquet (clair)",
+      "x": 9,
+      "z": 9.25,
+      "r": 1.25
+    },
+    {
+      "id": "hort-1",
+      "type": "hortensia",
+      "label": "Hortensia",
+      "x": 16.5,
+      "z": 23.4,
+      "r": 0.7
+    },
+    {
+      "id": "hort-2",
+      "type": "hortensia",
+      "label": "Hortensia",
+      "x": 18.5,
+      "z": 23.4,
+      "r": 0.7
+    },
+    {
+      "id": "hort-3",
+      "type": "hortensia",
+      "label": "Hortensia",
+      "x": 28,
+      "z": 23.4,
+      "r": 0.7
+    },
+    {
+      "id": "hort-4",
+      "type": "hortensia",
+      "label": "Hortensia",
+      "x": 30,
+      "z": 23.4,
+      "r": 0.7
+    },
+    {
+      "id": "spawn-joueur",
+      "type": "repere",
+      "label": "Départ du joueur",
+      "x": 20,
+      "z": 20,
+      "r": 0.6
+    },
+    {
+      "id": "spawn-portail",
+      "type": "repere",
+      "label": "Entrée zombies : portail",
+      "x": 36.6,
+      "z": 30.2,
+      "r": 0.6
+    },
+    {
+      "id": "spawn-chemin",
+      "type": "repere",
+      "label": "Entrée zombies : chemin",
+      "x": 54.8,
+      "z": 10,
+      "r": 0.6
+    },
+    {
+      "id": "spawn-haie",
+      "type": "repere",
+      "label": "Entrée zombies : trou de haie",
+      "x": 31.75,
+      "z": 0.75,
+      "r": 0.6
+    },
+    {
+      "id": "tas-bois-copie-781",
+      "type": "tasdebois",
+      "label": "Tas de bois vert",
+      "x": 38.5,
+      "z": 11.75,
+      "l": 2.6,
+      "p": 2.4,
+      "rot": 0
+    }
+  ]
+}

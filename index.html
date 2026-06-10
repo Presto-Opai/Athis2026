@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Athis 2026 — le jardin, le plan &amp; les navets</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Caprasimo&family=Nunito:ital,wght@0,400;0,700;0,900;1,400&display=swap');
+  :root{--paper:#f2ecdd;--ink:#3c332a;--stone:#8d8170;--accent:#4c6639;--navet:#7d5a9e;}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{min-height:100vh;font-family:'Nunito','Trebuchet MS',sans-serif;color:var(--ink);
+    display:flex;flex-direction:column;align-items:center;gap:26px;padding:48px 20px 60px;
+    background:
+      radial-gradient(ellipse at 50% 115%, rgba(70,96,58,.5), transparent 60%),
+      radial-gradient(ellipse at 18% 70%, rgba(242,174,102,.35), transparent 55%),
+      linear-gradient(180deg,#8e9aa6 0%,#c9ab8e 45%,#e8c79a 75%,#cfc4a4 100%);}
+  body::before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.5;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.05 0.04 0.04 0 0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");}
+  h1{font-family:'Caprasimo','Cooper Black',Georgia,serif;font-weight:400;text-align:center;
+    font-size:clamp(40px,8vw,84px);line-height:.95;color:#fdfdf8;transform:rotate(-2deg);
+    text-shadow:0 4px 0 #5a6b48,0 9px 24px rgba(40,50,30,.5);}
+  .sub{font-style:italic;text-align:center;max-width:560px;font-size:17px;color:#4a4538;}
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:18px;
+    width:100%;max-width:880px;}
+  a.card{display:block;background:var(--paper);border:2px solid var(--ink);border-radius:12px;
+    box-shadow:0 6px 0 rgba(60,51,42,.35);padding:22px 24px;text-decoration:none;color:var(--ink);
+    transition:transform .12s, box-shadow .12s;position:relative;}
+  a.card:hover{transform:translateY(-4px) rotate(-.5deg);box-shadow:0 10px 0 rgba(60,51,42,.35);}
+  .card .emoji{font-size:40px;}
+  .card h2{font-family:'Caprasimo',Georgia,serif;font-weight:400;font-size:22px;margin:8px 0 6px;}
+  .card p{font-size:14px;line-height:1.5;color:#5d5346;}
+  .card .go{position:absolute;top:18px;right:18px;font-weight:900;color:var(--accent);}
+  footer{font-size:13px;font-style:italic;color:#5d5346;text-align:center;max-width:600px;line-height:1.6;}
+  footer a{color:var(--accent);}
+</style>
+</head>
+<body>
+  <h1>ATHIS<br>2026</h1>
+  <p class="sub">Une maison normande, son jardin reconstitué mètre par mètre…
+    et des zombies qui ont eu la mauvaise idée de pousser le portail du <b>92</b>.</p>
+
+  <div class="cards">
+    <a class="card" href="NavetPanique/">
+      <span class="emoji">🥬🧟</span><span class="go">→</span>
+      <h2>Navet Panique !</h2>
+      <p>Le jeu. Un FPS au coucher du soleil : défends le potager à coups de navets.
+      Au clavier ou sur téléphone (joystick tactile). Ça se joue ici, dans le navigateur.</p>
+    </a>
+    <a class="card" href="plan-maison-jardin.svg">
+      <span class="emoji">🗺️</span><span class="go">→</span>
+      <h2>Le plan</h2>
+      <p>Le relevé de la maison et du jardin, style carte ancienne — longère, dépendance,
+      porte blanche, grand thuya, potager. Échelle 1&nbsp;m = 22&nbsp;px.</p>
+    </a>
+    <a class="card" href="editeur-plan.html">
+      <span class="emoji">✏️</span><span class="go">→</span>
+      <h2>L'éditeur de plan</h2>
+      <p>Corrige le plan toi-même : déplace, redimensionne, annote, puis exporte
+      <code>plan.json</code> — il sert de source de vérité au jeu.</p>
+    </a>
+  </div>
+
+  <footer>
+    Jardin relevé d'après une vidéo d'hiver et un « plan griffonage », puis corrigé par l'auteur.<br>
+    Construit avec affection par <a href="https://claude.com/claude-code">Claude Code</a> (Fable) — juin 2026.
+  </footer>
+</body>
+</html>

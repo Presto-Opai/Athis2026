@@ -1,0 +1,8 @@
+# Photos personnelles de la maison — ne JAMAIS publier
+maisonathis_frames/
+
+# Outils locaux
+.claude/
+node_modules/
+Thumbs.db
+desktop.ini
