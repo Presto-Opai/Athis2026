@@ -22,6 +22,10 @@ Double-clique sur **`index.html`** — c'est tout. Aucune installation, aucun se
 | **E** | ramasser un navet (dans le potager) |
 | **Échap** | pause |
 
+**Sur téléphone / tablette** : joystick virtuel à gauche (à fond = courir), glisser
+à droite pour regarder, gros bouton 🥬 pour lancer (maintenir = plus fort), ⏸ pour
+la pause. La récolte au potager est automatique.
+
 ## Règles du potager
 
 - 15 navets maximum dans les poches ; recharge en marchant dans le **potager**
