@@ -33,6 +33,7 @@ const flatZones = [
   { x: 12.5, z: 4, hw: 5.2, hd: 2.7 },     // potager
   { x: 36.5, z: 29.5, hw: 4.5, hd: 3.5 },  // entrée / portail
   { x: 15.25, z: 22, hw: 1.2, hd: 2.8 },   // mur porte blanche
+  { x: 50.25, z: 4.25, hw: 2.0, hd: 1.7 }, // cabane d'enfant
 ];
 function heightAt(px, pz) {
   let m = 1;
@@ -484,8 +485,9 @@ const M = {
 // ---------- collisions ----------
 const boxColliders = [];
 const discColliders = [];
-function addBox(x, z, w, d) { boxColliders.push({ x, z, hw: w / 2, hd: d / 2 }); }
-function addDisc(x, z, r) { discColliders.push({ x, z, r }); }
+// h = hauteur du sommet (m) : seuls les colliders sous le navet l'arrêtent
+function addBox(x, z, w, d, h = 3.4) { boxColliders.push({ x, z, hw: w / 2, hd: d / 2, h }); }
+function addDisc(x, z, r, h = 3.4) { discColliders.push({ x, z, r, h }); }
 function collide(px, pz, r) {
   for (const b of boxColliders) {
     const dx = clamp(px, b.x - b.hw, b.x + b.hw) - px;
@@ -505,6 +507,22 @@ function collide(px, pz, r) {
     }
   }
   return [px, pz];
+}
+// un navet vole : seuls les obstacles plus hauts que lui le stoppent
+// (les murets bas et le feu de camp le laissent passer pour toucher les zombies)
+function navetBlocked(px, pz, y, r) {
+  for (const b of boxColliders) {
+    if (y > b.h) continue;
+    const dx = clamp(px, b.x - b.hw, b.x + b.hw) - px;
+    const dz = clamp(pz, b.z - b.hd, b.z + b.hd) - pz;
+    if (dx * dx + dz * dz < r * r) return true;
+  }
+  for (const c of discColliders) {
+    if (y > c.h) continue;
+    const dx = px - c.x, dz = pz - c.z, rr = r + c.r;
+    if (dx * dx + dz * dz < rr * rr) return true;
+  }
+  return false;
 }
 
 // ============================================================
@@ -586,7 +604,10 @@ function mesh(geo, mat, x, y, z, cast = true, recv = true, onGround = false) {
     (x < 32.2 && z > 17.9) && !(x > 15.8 && z < 18.3) && (z > 17.9 && (x < 32.2)) && (z > 17.9 && x < 32.2) ||
     (x > 1 && x < 15.6 && z > 13.4 && z < 20.6) ||             // maison 2 + appentis
     (x > 7.6 && x < 17.4 && z > 1.6 && z < 6.4) ||             // potager
-    (x > 33 && x < 40 && z > 26 && z < 31);                    // entrée portail
+    (x > 33 && x < 40 && z > 26 && z < 31) ||                  // entrée portail
+    (Math.hypot(x - 20.75, z - 10.75) < 1.0) ||               // feu de camp
+    (x > 48.5 && x < 52 && z > 2.8 && z < 5.7) ||             // cabane d'enfant
+    (x > 9.4 && x < 11.1 && z > 7.8 && z < 9.2);              // bac à compost
   while (placed < COUNT && guard++ < COUNT * 14) {
     const x = rand(1.2, 56), z = rand(1.2, 35);
     if (blocked(x, z)) continue;
@@ -631,18 +652,33 @@ function house(cx, cz, w, d, eave, ridge, opts = {}) {
     map: texOf(roofCanvas, Math.max(1.4, w / 6), 1.6),
     bumpMap: texOf(roofBumpCanvas, Math.max(1.4, w / 6), 1.6, false), bumpScale: 0.06, roughness: 0.9,
   });
-  const slope = Math.hypot(d / 2 + 0.35, ridge - eave);
-  const ang = Math.atan2(ridge - eave, d / 2 + 0.35);
-  // toits : pans nord/sud (faîtage le long de la longueur)
-  for (const s of [-1, 1]) {
-    const pan = new THREE.Mesh(new THREE.BoxGeometry(w + 0.7, 0.14, slope), roofMat);
-    pan.position.set(0, (eave + ridge) / 2, s * (d / 4 + 0.07));
-    pan.rotation.x = s * ang;
-    pan.castShadow = pan.receiveShadow = true;
-    grp.add(pan);
+  if (opts.ridgeZ) {
+    // faîtage le long de la profondeur (z) : pans est/ouest, pignons vers ±z
+    const slope = Math.hypot(w / 2 + 0.35, ridge - eave);
+    const ang = Math.atan2(ridge - eave, w / 2 + 0.35);
+    for (const s of [-1, 1]) {
+      const pan = new THREE.Mesh(new THREE.BoxGeometry(slope, 0.14, d + 0.7), roofMat);
+      pan.position.set(s * (w / 4 + 0.07), (eave + ridge) / 2, 0);
+      pan.rotation.z = -s * ang;
+      pan.castShadow = pan.receiveShadow = true;
+      grp.add(pan);
+    }
+    const ridgeBeam = new THREE.Mesh(new THREE.BoxGeometry(0.3, 0.18, d + 0.7), roofMat);
+    ridgeBeam.position.y = ridge + 0.02; ridgeBeam.castShadow = true; grp.add(ridgeBeam);
+  } else {
+    const slope = Math.hypot(d / 2 + 0.35, ridge - eave);
+    const ang = Math.atan2(ridge - eave, d / 2 + 0.35);
+    // toits : pans nord/sud (faîtage le long de la longueur)
+    for (const s of [-1, 1]) {
+      const pan = new THREE.Mesh(new THREE.BoxGeometry(w + 0.7, 0.14, slope), roofMat);
+      pan.position.set(0, (eave + ridge) / 2, s * (d / 4 + 0.07));
+      pan.rotation.x = s * ang;
+      pan.castShadow = pan.receiveShadow = true;
+      grp.add(pan);
+    }
+    const ridgeBeam = new THREE.Mesh(new THREE.BoxGeometry(w + 0.7, 0.18, 0.3), roofMat);
+    ridgeBeam.position.y = ridge + 0.02; ridgeBeam.castShadow = true; grp.add(ridgeBeam);
   }
-  const ridgeBeam = new THREE.Mesh(new THREE.BoxGeometry(w + 0.7, 0.18, 0.3), roofMat);
-  ridgeBeam.position.y = ridge + 0.02; ridgeBeam.castShadow = true; grp.add(ridgeBeam);
   for (const chx of (opts.chimneys || [])) {
     const ch = new THREE.Mesh(new THREE.BoxGeometry(0.9, 1.7, 0.9), gblMat);
     ch.position.set(chx, ridge + 0.35, 0); ch.castShadow = true; grp.add(ch);
@@ -674,22 +710,27 @@ const maison1 = house(16.5, 27, 30.25, 7.75, 3.1, 5.8, { chimneys: [-5, 8] });
   for (const [fx, lit] of [[-13, false], [-9.5, true], [-6, false], [-2.5, false], [1, false], [5, true], [9, true]]) {
     plaque(maison1, lit ? texWindowLit : texWindow, 1.1, 1.4, fx, 1.5, zN, Math.PI, lit);
   }
-  plaque(maison1, texDoorWhite, 1.5, 2.2, 12, 1.1, zN, Math.PI);   // porte-fenêtre sur la cour
-  plaque(maison1, texDoorWhite, 1.3, 2.2, 3.2, 1.1, zN, Math.PI);  // seconde porte
+  plaque(maison1, texDoorWhite, 1.3, 2.2, 3.2, 1.1, zN, Math.PI);  // porte sur la cour
   const zS = 3.875 + 0.04;
   for (const fx of [-11, -6.5, -2, 2.5, 7]) plaque(maison1, texWindow, 1.1, 1.4, fx, 1.5, zS);
-  plaque(maison1, texDoorWhite, 1.3, 2.2, 11, 1.1, zS);
+  plaque(maison1, texDoorWhite, 1.3, 2.2, 11, 1.1, zS);          // porte-fenêtre côté portail
+  plaque(maison1, texWindow, 0.95, 1.15, 11, 3.0, zS);           // fenêtre d'étage au-dessus
+  const linteau = new THREE.Mesh(new THREE.BoxGeometry(1.6, 0.18, 0.16), M.granite);
+  linteau.position.set(11, 2.32, zS); linteau.castShadow = true; maison1.add(linteau); // linteau en pierre
 }
 
-// MAISON 2 — dépendance (4.5..15, 13.75..20.25)
-const maison2 = house(9.75, 17, 10.5, 6.5, 3.0, 5.2, {});
+// MAISON 2 — dépendance (4.5..15, 13.75..20.25), pignon vers la cour
+const maison2 = house(9.75, 17, 10.5, 6.5, 3.0, 5.2, { ridgeZ: true });
 {
-  const zS = 3.25 + 0.04;
-  plaque(maison2, texDoorWhite, 1.5, 2.2, 0.6, 1.1, zS);   // porte-fenêtre
-  plaque(maison2, texDoorGrey, 1.1, 2.1, 3.2, 1.05, zS);   // porte grise
-  plaque(maison2, texWindow, 1.0, 1.3, -2.6, 1.5, zS);
-  plaque(maison2, texWindow, 1.0, 1.3, 0, 1.6, -3.25 - 0.04, Math.PI);
-  plaque(maison2, texWindowLit, 1.0, 1.3, -3.4, 1.6, -3.25 - 0.04, Math.PI, true);
+  // pignon sud (face à la cour & à la table verte) : une porte-fenêtre centrée
+  plaque(maison2, texDoorWhite, 1.5, 2.2, 0, 1.1, 3.25 + 0.04);
+  // mur est (vers la cour et la longère) : une porte-fenêtre + une fenêtre
+  plaque(maison2, texDoorWhite, 1.4, 2.2, 5.25 + 0.04, 1.1, 1.4, Math.PI / 2);
+  plaque(maison2, texWindow, 1.0, 1.3, 5.25 + 0.04, 1.5, -1.4, Math.PI / 2);
+  // mur ouest : une fenêtre qui donne sur l'appentis à vélos
+  plaque(maison2, texWindow, 1.0, 1.3, -5.25 - 0.04, 1.5, 0, -Math.PI / 2);
+  // pignon nord (face au potager) : seulement une fenêtre moyenne en hauteur (étage)
+  plaque(maison2, texWindowLit, 1.1, 1.2, 0, 2.9, -3.25 - 0.04, Math.PI, true);
 }
 
 // --- APPENTIS vélos (1.375..5.125, 14..20) ---
@@ -751,8 +792,8 @@ function picketGate(cx, cz, width, opening = 0) {
 }
 {
   mesh(new THREE.BoxGeometry(3, 1.1, 0.45), M.stone, 33.5, 0.55, 31, true, true, true);
-  mesh(new THREE.BoxGeometry(3, 1.1, 0.45), M.stone, 39.5, 0.55, 31, true, true, true);
-  addBox(33.5, 31, 3, 0.5); addBox(39.5, 31, 3, 0.5);
+  mesh(new THREE.BoxGeometry(3, 1.1, 0.75), M.stone, 39.5, 0.55, 31, true, true, true);
+  addBox(33.5, 31, 3, 0.5); addBox(39.5, 31, 3, 0.8);
   picketGate(35.8, 31, 1.5, -0.25);
   picketGate(37.4, 31, 1.4, 0.35);
   addBox(36.6, 31, 3.2, 0.4); // le portail reste fermé (les zombies sautent par-dessus !)
@@ -765,6 +806,22 @@ function picketGate(cx, cz, width, opening = 0) {
   }));
   const pl = new THREE.Mesh(new THREE.PlaneGeometry(0.34, 0.22), std({ map: t92, roughness: 0.5 }));
   const pp = P(35.1, 30.96); pl.position.set(pp.x, 0.95 + heightAt(35.1, 30.9), pp.z - 0.26); pl.rotation.y = Math.PI; world.add(pl);
+}
+
+// --- PORTAIL BLANC « 86 » au bout du chemin (58, 31.25 — l 5.5) ---
+{
+  mesh(new THREE.BoxGeometry(0.3, 1.5, 0.3), M.granite, 55.5, 0.75, 31.25, true, true, true);
+  mesh(new THREE.BoxGeometry(0.3, 1.5, 0.3), M.granite, 60.5, 0.75, 31.25, true, true, true);
+  picketGate(56.9, 31.25, 2.5, 0.12);
+  picketGate(59.3, 31.25, 2.4, -0.08);
+  addBox(58, 31.25, 5.5, 0.75); // lui aussi reste fermé
+  const t86 = texOf(makeCanvas(64, 40, (g) => {
+    g.fillStyle = '#f6f5ec'; g.fillRect(0, 0, 64, 40);
+    g.strokeStyle = '#2e4a8a'; g.lineWidth = 3; g.strokeRect(2, 2, 60, 36);
+    g.fillStyle = '#2e4a8a'; g.font = 'bold 26px Georgia'; g.textAlign = 'center'; g.fillText('86', 32, 30);
+  }));
+  const pl = new THREE.Mesh(new THREE.PlaneGeometry(0.34, 0.22), std({ map: t86, roughness: 0.5 }));
+  const pp = P(55.5, 31.25); pl.position.set(pp.x, 1.05 + heightAt(55.5, 31.25), pp.z - 0.17); pl.rotation.y = Math.PI; world.add(pl);
 }
 
 // --- haies (positions plan.json, brèches pour les zombies) ---
@@ -797,11 +854,11 @@ hedgeRow(0, 0.7, 30, 0.7);                    // haie épaisse NO
 hedgeRow(33, 1.25, 53, 1.25, 2.2, 2.2);       // haie épaisse NE (brèche 30..33)
 hedgeRow(0.7, 0, 0.7, 36);                    // haie ouest
 hedgeRow(53.75, 0, 53.75, 8.5);               // haie est nord
-hedgeRow(55, 19.25, 55, 29.75);               // haie est sud (brèche 8.5..19.25)
+hedgeRow(55, 18.63, 55, 30.38, 2.2, 1.0);     // haie est sud (brèche 8.5..18.6)
 hedgeRow(0, 31.25, 14, 31.25);                // haie sud-ouest (derrière la longère)
-hedgeRow(42, 31, 56, 31);                     // haie sud-est
+hedgeRow(40.88, 31, 55.63, 31, 2.2, 1.75);    // haie sud-est
 hedgeRow(14, 31, 32, 31, 1.6, 0.8);           // haie basse derrière maison 1
-hedgeRow(44.75, 28.75, 53.75, 28.75, 2.4, 1.6); // haie extérieure SE
+hedgeRow(43.63, 29.25, 53.38, 29.25, 2.4, 2); // haie extérieure SE
 
 // --- arbres d'hiver : tronc + branches récursives ---
 function branch(parent, len, radius, depth) {
@@ -855,9 +912,11 @@ function bush(x, z, r = 1, mat = M.bush) {
 // arbres (positions plan.json)
 tree(21, 15.75, 6);        // arbre du jardin
 tree(16, 9.75, 4.5);       // arbre solitaire
-tree(42.75, 28.25, 6);
-tree(50.5, 16, 5);
+tree(40.75, 28.25, 6);
+tree(51.5, 17, 5);
 tree(51, 22, 6.5);
+tree(13.5, 13, 3.5);       // petit arbre près de la dépendance
+tree(26.5, 12.25, 5);      // arbre entre l'étendoir et le bosquet
 // GRAND THUYA central (33.75, 12 — r 3.5 : un monument)
 {
   const x = 33.75, z = 12;
@@ -873,9 +932,9 @@ tree(51, 22, 6.5);
 }
 // bosquets (positions plan.json)
 bush(26, 4.5, 2.4);
-bush(28.5, 11.75, 2.0);
-bush(11.5, 13, 1);
-bush(9, 9.25, 1.25, M.bushLight);
+bush(28.25, 11.25, 2.0);
+bush(11.5, 12.75, 1);
+bush(9, 9.25, 1.5, M.bushLight);
 // murets (positions plan.json)
 function muret(x1, z1, x2, z2, th = 0.4) {
   const len = Math.hypot(x2 - x1, z2 - z1);
@@ -885,10 +944,11 @@ function muret(x1, z1, x2, z2, th = 0.4) {
   const cap = mesh(new THREE.BoxGeometry(len, 0.07, th + 0.1), M.granite, cx, 0.58, cz, true, true, true);
   cap.rotation.y = m.rotation.y;
   const n = Math.ceil(len / 0.8);
-  for (let i = 0; i <= n; i++) addDisc(x1 + (x2 - x1) * i / n, z1 + (z2 - z1) * i / n, th * 0.75);
+  // h basse : arrête les zombies mais laisse passer les navets par-dessus
+  for (let i = 0; i <= n; i++) addDisc(x1 + (x2 - x1) * i / n, z1 + (z2 - z1) * i / n, th * 0.75, 0.7);
 }
 muret(19.53, 17.75, 31.47, 17.75, 0.7);  // muret central ouest (le long de la cour)
-muret(19.65, 13.12, 31.35, 17.38, 0.45); // muret central est (en diagonale)
+muret(19.65, 13.37, 31.35, 17.63, 0.45); // muret central est (en diagonale)
 muret(29, 2.03, 29, 7.48, 1.0);          // muret du bosquet nord (vertical)
 // potager : poireaux et navets en place
 for (let i = 0; i < 12; i++) {
@@ -902,6 +962,8 @@ for (let i = 0; i < 12; i++) {
 }
 // hortensias le long de la longère
 for (const hx of [16.5, 18.5, 28, 30]) bush(hx, 23.4, 0.7, M.hortensia);
+// hortensias/fleurs le long du muret central
+for (const [hx, hz] of [[23.25, 16], [24.25, 16.75], [25.75, 16.5], [27, 17]]) bush(hx, hz, 0.7, M.hortensia);
 // tas de bois vert ×2 (un petit près du thuya, un grand à l'est)
 function woodpile(cx, cz, len, cols, rows, rotDeg = 0) {
   const logMat = std({ color: 0x55663f, roughness: 0.9 });
@@ -918,8 +980,88 @@ function woodpile(cx, cz, len, cols, rows, rotDeg = 0) {
   world.add(grp);
   addBox(cx, cz, Math.max(len, cols * 0.36), Math.max(len, cols * 0.36) * 0.7);
 }
-woodpile(26.25, 10.75, 1.0, 3, 2, 30);
-woodpile(38.5, 11.75, 2.0, 6, 3, 0);
+woodpile(25.25, 11.5, 1.0, 3, 2, 30);
+woodpile(37, 10.5, 2.0, 6, 3, 0);
+// bac à compost (10.25, 8.5 — caisse en bois ouverte sur le dessus)
+{
+  const grp = new THREE.Group(); const p = P(10.25, 8.5);
+  grp.position.set(p.x, heightAt(10.25, 8.5), p.z);
+  const plank = std({ color: 0x6f5b40, roughness: 0.95 });
+  for (let r = 0; r < 3; r++) {
+    const y = 0.16 + r * 0.27;
+    for (const s of [-1, 1]) {
+      const long = new THREE.Mesh(new THREE.BoxGeometry(1.25, 0.2, 0.06), plank);
+      long.position.set(0, y, s * 0.47); long.castShadow = true; grp.add(long);
+      const court = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.2, 0.88), plank);
+      court.position.set(s * 0.595, y, 0); court.castShadow = true; grp.add(court);
+    }
+  }
+  for (const [sx, sz] of [[-1, -1], [1, -1], [-1, 1], [1, 1]]) {
+    const post = new THREE.Mesh(new THREE.BoxGeometry(0.09, 0.85, 0.09), M.wood);
+    post.position.set(sx * 0.595, 0.42, sz * 0.47); post.castShadow = true; grp.add(post);
+  }
+  const compost = new THREE.Mesh(new THREE.BoxGeometry(1.12, 0.6, 0.86), std({ color: 0x3e3326, roughness: 1 }));
+  compost.position.y = 0.32; grp.add(compost);
+  world.add(grp);
+  addBox(10.25, 8.5, 1.3, 1.05);
+}
+// feu de camp presque éteint (20.75, 10.75 — cercle de pierres, braises)
+{
+  const x = 20.75, z = 10.75;
+  for (let i = 0; i < 9; i++) {
+    const a = i / 9 * Math.PI * 2 + rand(-0.15, 0.15);
+    const st = mesh(new THREE.DodecahedronGeometry(rand(0.13, 0.19)), M.granite,
+      x + Math.cos(a) * 0.72, 0.07, z + Math.sin(a) * 0.62, true, true, true);
+    st.rotation.set(rand(0, 3), rand(0, 3), 0);
+  }
+  const charMat = std({ color: 0x1f1a16, roughness: 1 });
+  for (let i = 0; i < 4; i++) {
+    const log = mesh(new THREE.CylinderGeometry(0.05, 0.06, rand(0.55, 0.75), 6), charMat,
+      x + rand(-0.12, 0.12), 0.1, z + rand(-0.1, 0.1), true, true, true);
+    log.rotation.set(Math.PI / 2 + rand(-0.25, 0.25), 0, i * 0.8 + rand(-0.3, 0.3));
+  }
+  const braise = mesh(new THREE.CircleGeometry(0.22, 10),
+    new THREE.MeshBasicMaterial({ color: 0xc24a18 }), x, 0.045, z, false, false, true);
+  braise.rotation.x = -Math.PI / 2;
+  const pf = P(x, z);
+  const glow = new THREE.PointLight(0xff7a36, 0.55, 4.5, 2);
+  glow.position.set(pf.x, 0.4 + heightAt(x, z), pf.z);
+  scene.add(glow);
+  addDisc(x, z, 0.75, 0.35); // basse : les navets passent par-dessus
+}
+// cabane d'enfant (50.25, 4.25 — 3 × 2.5)
+{
+  const grp = new THREE.Group(); const p = P(50.25, 4.25);
+  grp.position.set(p.x, heightAt(50.25, 4.25), p.z);
+  const bois = std({ color: 0x8a6e4e, roughness: 0.95 });
+  const walls = new THREE.Mesh(new THREE.BoxGeometry(3, 1.5, 2.5), bois);
+  walls.position.y = 0.75; walls.castShadow = walls.receiveShadow = true; grp.add(walls);
+  for (const s of [-1, 1]) {
+    const shape = new THREE.Shape();
+    shape.moveTo(-1.5, 0); shape.lineTo(1.5, 0); shape.lineTo(0, 0.7); shape.closePath();
+    const gbl = new THREE.Mesh(new THREE.ShapeGeometry(shape), bois);
+    gbl.position.set(0, 1.5, s * 1.24);
+    if (s < 0) gbl.rotation.y = Math.PI;
+    gbl.castShadow = true; grp.add(gbl);
+  }
+  const roofMat = std({ map: texOf(roofCanvas, 1.2, 0.8), bumpMap: texOf(roofBumpCanvas, 1.2, 0.8, false), bumpScale: 0.06 });
+  // faîtage le long de z : pans est/ouest, alignés sur les pignons (façade au sud)
+  const slope = Math.hypot(1.7, 0.7);
+  const ang = Math.atan2(0.7, 1.7);
+  for (const s of [-1, 1]) {
+    const pan = new THREE.Mesh(new THREE.BoxGeometry(slope, 0.08, 2.9), roofMat);
+    pan.position.set(s * 0.79, 1.85, 0);
+    pan.rotation.z = -s * ang;
+    pan.castShadow = pan.receiveShadow = true; grp.add(pan);
+  }
+  // petite porte rouge et fenêtre, face au jardin (sud)
+  const porte = new THREE.Mesh(new THREE.PlaneGeometry(0.6, 1.1), std({ color: 0x9c4a3a, roughness: 0.8 }));
+  porte.position.set(-0.6, 0.55, 1.26); grp.add(porte);
+  const fen = new THREE.Mesh(new THREE.PlaneGeometry(0.55, 0.5), std({ map: texWindow, roughness: 0.55 }));
+  fen.position.set(0.7, 0.85, 1.26); grp.add(fen);
+  world.add(grp);
+  addBox(50.25, 4.25, 3, 2.5);
+}
 // table verte (3.25 × 1.5 — la grande table de la cour)
 {
   mesh(new THREE.BoxGeometry(3.25, 0.06, 1.5), M.greenTable, 22.75, 0.72, 20.5);
@@ -928,13 +1070,13 @@ woodpile(38.5, 11.75, 2.0, 6, 3, 0);
   }
   addBox(22.75, 20.5, 3.3, 1.55);
 }
-// étendoir à linge en diagonale (centre 24,13.5 — rot 145°)
+// étendoir à linge en diagonale (centre 24,13.75 — rot 145°)
 const laundry = [];
 {
   const ang = 145 * Math.PI / 180;
   const grp = new THREE.Group();
-  const pC = P(24, 13.5);
-  const hAvg = (heightAt(20.72, 15.79) + heightAt(27.28, 11.21)) / 2;
+  const pC = P(24, 13.75);
+  const hAvg = (heightAt(20.72, 16.04) + heightAt(27.28, 11.46)) / 2;
   grp.position.set(pC.x, hAvg, pC.z);
   grp.rotation.y = -ang;
   for (const lx of [-4, 4]) {
@@ -956,7 +1098,7 @@ const laundry = [];
     cl.castShadow = true; grp.add(cl); laundry.push(cl);
   }
   world.add(grp);
-  addDisc(20.72, 15.79, 0.15); addDisc(27.28, 11.21, 0.15);
+  addDisc(20.72, 16.04, 0.15); addDisc(27.28, 11.46, 0.15);
 }
 // feuilles mortes qui dérivent
 let leavesPts;
@@ -1205,11 +1347,8 @@ function updateNavets(dt) {
     }
     if (!hit && n.m.position.y < hAtWorld(n.m.position.x, n.m.position.z) + 0.12) { splat(n.m.position); hit = true; }
     if (!hit) {
-      const [px, pz] = [n.m.position.x + W / 2, n.m.position.z + D / 2];
-      const [cx, cz] = collide(px, pz, 0.12);
-      if (Math.abs(cx - px) > 0.001 || Math.abs(cz - pz) > 0.001) {
-        if (n.m.position.y < 3.4) { splat(n.m.position); hit = true; }
-      }
+      const px = n.m.position.x + W / 2, pz = n.m.position.z + D / 2;
+      if (navetBlocked(px, pz, n.m.position.y, 0.12)) { splat(n.m.position); hit = true; }
     }
     if (hit || n.life <= 0) {
       scene.remove(n.m); state.navets.splice(i, 1);
@@ -1604,24 +1743,29 @@ const mmOff = document.createElement('canvas'); mmOff.width = 220; mmOff.height 
   g.fillRect(33 * s, 0.15 * s, 20 * s, 2.2 * s);      // NE
   g.fillRect(0, 0, 1.4 * s, 36 * s);                  // ouest
   g.fillRect(53.05 * s, 0, 1.4 * s, 8.5 * s);         // est nord
-  g.fillRect(54.3 * s, 19.25 * s, 1.4 * s, 10.5 * s); // est sud
+  g.fillRect(54.5 * s, 18.63 * s, 1 * s, 11.75 * s);  // est sud
   g.fillRect(0, 30.55 * s, 14 * s, 1.4 * s);          // SO
-  g.fillRect(42 * s, 30.3 * s, 14 * s, 1.4 * s);      // SE
+  g.fillRect(40.88 * s, 30.13 * s, 14.75 * s, 1.75 * s); // SE
   g.fillRect(14 * s, 30.6 * s, 18 * s, 0.8 * s);      // haie basse
-  g.fillRect(44.75 * s, 27.95 * s, 9 * s, 1.6 * s);   // ext. SE
+  g.fillRect(43.63 * s, 28.25 * s, 9.75 * s, 2 * s);  // ext. SE
+  g.fillStyle = '#6e5142'; g.fillRect(48.75 * s, 3 * s, 3 * s, 2.5 * s);             // cabane d'enfant
+  g.fillStyle = '#5a4632'; g.fillRect(9.63 * s, 8 * s, 1.25 * s, 1 * s);             // bac à compost
   const dot = (x, z, r, c) => { g.fillStyle = c; g.beginPath(); g.arc(x * s, z * s, r * s, 0, 7); g.fill(); };
   dot(33.75, 12, 3.5, '#5e7440');                     // grand thuya
-  dot(26, 4.5, 2.4, '#46603a'); dot(28.5, 11.75, 2, '#46603a');
-  dot(11.5, 13, 1, '#46603a'); dot(9, 9.25, 1.25, '#5a7a48');
+  dot(26, 4.5, 2.4, '#46603a'); dot(28.25, 11.25, 2, '#46603a');
+  dot(11.5, 12.75, 1, '#46603a'); dot(9, 9.25, 1.5, '#5a7a48');
   dot(21, 15.75, 1.2, '#7a6a52'); dot(16, 9.75, 0.8, '#7a6a52');
-  dot(42.75, 28.25, 1.2, '#7a6a52'); dot(50.5, 16, 1, '#7a6a52'); dot(51, 22, 1.3, '#7a6a52');
+  dot(40.75, 28.25, 1.2, '#7a6a52'); dot(51.5, 17, 1, '#7a6a52'); dot(51, 22, 1.3, '#7a6a52');
+  dot(13.5, 13, 0.5, '#7a6a52'); dot(26.5, 12.25, 1, '#7a6a52');
+  dot(20.75, 10.75, 0.7, '#8a8276');                  // feu de camp
   g.fillStyle = '#5d7045';                                                            // tas de bois
-  g.fillRect(25.7 * s, 10.2 * s, 1.2 * s, 1.3 * s); g.fillRect(37.2 * s, 10.55 * s, 2.6 * s, 2.4 * s);
+  g.fillRect(24.65 * s, 10.85 * s, 1.2 * s, 1.3 * s); g.fillRect(35.7 * s, 9.3 * s, 2.6 * s, 2.4 * s);
   g.strokeStyle = '#c2b49c'; g.lineWidth = 2;                                         // murets
   g.beginPath(); g.moveTo(19.5 * s, 17.75 * s); g.lineTo(31.5 * s, 17.75 * s); g.stroke();
-  g.beginPath(); g.moveTo(19.65 * s, 13.12 * s); g.lineTo(31.35 * s, 17.38 * s); g.stroke();
+  g.beginPath(); g.moveTo(19.65 * s, 13.37 * s); g.lineTo(31.35 * s, 17.63 * s); g.stroke();
   g.beginPath(); g.moveTo(29 * s, 2 * s); g.lineTo(29 * s, 7.5 * s); g.stroke();
-  g.fillStyle = '#fff'; g.fillRect(35 * s, 30.6 * s, 2.6 * s, 2);                    // portail
+  g.fillStyle = '#fff'; g.fillRect(35 * s, 30.6 * s, 2.6 * s, 2);                    // portail 92
+  g.fillRect(55.5 * s, 30.9 * s, 4.5 * s, 2);                                        // portail 86
   g.strokeStyle = 'rgba(60,51,42,.8)'; g.lineWidth = 2; g.strokeRect(0, 0, 220, 142);
 }
 function drawMinimap() {
